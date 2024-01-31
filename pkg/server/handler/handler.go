@@ -22,7 +22,7 @@ import (
 	ostack "github.com/drewbernetes/baski/pkg/providers/openstack"
 	"github.com/drewbernetes/baski/pkg/server/generated"
 	"github.com/drewbernetes/baski/pkg/server/server/util"
-	u "github.com/drewbernetes/baski/pkg/util"
+	"github.com/drewbernetes/baski/pkg/util/interfaces"
 	"github.com/gophercloud/gophercloud/openstack/imageservice/v2/images"
 	"log"
 	"net/http"
@@ -30,8 +30,8 @@ import (
 )
 
 type Handler struct {
-	baskiS3   u.S3Interface
-	dogkatS3  u.S3Interface
+	baskiS3   interfaces.S3Interface
+	dogkatS3  interfaces.S3Interface
 	cloudName string
 }
 
@@ -46,7 +46,7 @@ type ImageData struct {
 	TestData   generated.TestResult `json:"test_data"`
 }
 
-func New(b, d u.S3Interface, cloudName string) *Handler {
+func New(b, d interfaces.S3Interface, cloudName string) *Handler {
 	h := &Handler{
 		baskiS3:   b,
 		dogkatS3:  d,
@@ -80,7 +80,7 @@ func (h *Handler) ApiV1GetScans(w http.ResponseWriter, r *http.Request) {
 
 // fetchScanData grabs the scan data from S3 and parses it into JSON
 func fetchScansList(h *Handler) ([]string, error) {
-	contents, err := h.baskiS3.List()
+	contents, err := h.baskiS3.List("scans")
 	if err != nil {
 		return nil, err
 	}

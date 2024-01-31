@@ -32,7 +32,7 @@ jobs:
           CGO_ENABLED=0 go build -o "$BINARY_NAME" cmd/baski/main.go
       - name: Build Baski-Server
         run: |
-          CGO_ENABLED=0 go build -o "$SERVER_BINARY_NAME" cmd/baski/main.go
+          CGO_ENABLED=0 go build -o "$SERVER_BINARY_NAME" cmd/server/main.go
       - name: Release Notes
         run: |
           git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"

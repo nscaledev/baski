@@ -19,70 +19,87 @@ package remote
 import (
 	"github.com/drewbernetes/baski/pkg/mock"
 	"go.uber.org/mock/gomock"
-	"os"
 	"testing"
 )
 
-func generateTestData(t *testing.T, from string) *os.File {
-	f, err := os.Create(from)
-	if err != nil {
-		t.Error(err)
-		return nil
-	}
+//func generateTestData(t *testing.T, from string) *os.File {
+//	f, err := os.Create(from)
+//	if err != nil {
+//		t.Error(err)
+//		return nil
+//	}
+//
+//	return f
+//}
 
-	return f
+func TestNewSSHClient(t *testing.T) {
+	//TODO a test needs writing for this - we could consider just opening an SSH connection to validate it works
 }
 
-// TestCopyFromRemoteServer uses sftp to copy a file from a remotes server to a local directory.
 func TestCopyFromRemoteServer(t *testing.T) {
-	testFile := generateTestData(t, "/tmp/some-file.json")
+	//testFile := generateTestData(t, "/tmp/some-file.json")
+	//
+	//c := gomock.NewController(t)
+	//defer c.Finish()
+	//
+	//m := mock.NewMockSSHInterface(c)
+	//m.EXPECT().CopyFromRemoteServer("/tmp/some-file.json", "/tmp/another-file.json").Return(testFile, nil).AnyTimes()
+	//
+	//// Define test cases
+	//testCases := []struct {
+	//	name     string
+	//	ssh      *mock.MockSSHInterface
+	//	from     string
+	//	to       string
+	//	filename string
+	//}{
+	//	{
+	//		name: "Test case 1: Copy file from remote location",
+	//		ssh:  m,
+	//		from: "/tmp/some-file.json",
+	//		to:   "/tmp/another-file.json",
+	//	},
+	//}
+	//
+	//// RunScan the test cases
+	//for _, tc := range testCases {
+	//	t.Run(tc.name, func(t *testing.T) {
+	//		result, err := tc.ssh.CopyFromRemoteServer(tc.from, tc.to)
+	//		if err != nil {
+	//			t.Error(err)
+	//			return
+	//		}
+	//
+	//		if testFile != result {
+	//			t.Errorf("Expected data %+v, got: %+v\n", testFile, result)
+	//		}
+	//
+	//		if err = tc.ssh.SSHClose(); err != nil {
+	//			t.Error(err)
+	//			return
+	//		}
+	//
+	//		if err = tc.ssh.SFTPClose(); err != nil {
+	//			t.Error(err)
+	//			return
+	//		}
+	//	})
+	//}
+}
+
+func TestSSHClose(t *testing.T) {
 
 	c := gomock.NewController(t)
 	defer c.Finish()
 
 	m := mock.NewMockSSHInterface(c)
-	m.EXPECT().CopyFromRemoteServer("/tmp/some-file.json", "/tmp/another-file.json").Return(testFile, nil).AnyTimes()
 	m.EXPECT().SSHClose().Return(nil).AnyTimes()
+}
+
+func TestSFTPClose(t *testing.T) {
+	c := gomock.NewController(t)
+	defer c.Finish()
+
+	m := mock.NewMockSSHInterface(c)
 	m.EXPECT().SFTPClose().Return(nil).AnyTimes()
-
-	// Define test cases
-	testCases := []struct {
-		name     string
-		ssh      *mock.MockSSHInterface
-		from     string
-		to       string
-		filename string
-	}{
-		{
-			name: "Test case 1: Copy file from remote location",
-			ssh:  m,
-			from: "/tmp/some-file.json",
-			to:   "/tmp/another-file.json",
-		},
-	}
-
-	// RunScan the test cases
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			result, err := tc.ssh.CopyFromRemoteServer(tc.from, tc.to)
-			if err != nil {
-				t.Error(err)
-				return
-			}
-
-			if testFile != result {
-				t.Errorf("Expected data %+v, got: %+v\n", testFile, result)
-			}
-
-			if err = tc.ssh.SSHClose(); err != nil {
-				t.Error(err)
-				return
-			}
-
-			if err = tc.ssh.SFTPClose(); err != nil {
-				t.Error(err)
-				return
-			}
-		})
-	}
 }

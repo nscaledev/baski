@@ -24,7 +24,7 @@ import (
 )
 
 func TestNewComputeClient(t *testing.T) {
-	//TODO: Implement this.
+	//TODO: Implement this in a better way.
 	// Not sure of the best approach for this yet.
 }
 
@@ -196,7 +196,7 @@ func TestCreateServer(t *testing.T) {
 		client: th.ServiceClient(),
 	}
 	configDrive := false
-	s, err := cc.CreateServer("test-key", "1", "d32019d3-bc6e-4319-9c1d-6722fc136a22", &configDrive, []byte{}, "f90f6034-2570-4974-8351-6b49732ef2eb")
+	s, err := cc.CreateServer("test-key", "1", "d32019d3-bc6e-4319-9c1d-6722fc136a22", &configDrive, []byte{}, "f90f6034-2570-4974-8351-6b49732ef2eb", []string{"default"})
 	if err != nil {
 		t.Error(err)
 		return

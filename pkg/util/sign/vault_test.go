@@ -18,7 +18,7 @@ package sign
 
 import (
 	"github.com/drewbernetes/baski/pkg/mock"
-	"github.com/drewbernetes/baski/pkg/util"
+	"github.com/drewbernetes/baski/pkg/util/interfaces"
 	"go.uber.org/mock/gomock"
 	"testing"
 )
@@ -34,6 +34,6 @@ func TestFetch(t *testing.T) {
 	}
 }
 
-func fetch(v util.VaultInterface) ([]byte, error) {
+func fetch(v interfaces.VaultInterface) ([]byte, error) {
 	return v.Fetch("kv/eso", "some/path", "key")
 }

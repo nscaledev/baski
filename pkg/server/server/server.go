@@ -18,9 +18,9 @@ package server
 
 import (
 	"fmt"
-	"github.com/drewbernetes/baski/pkg/s3"
 	"github.com/drewbernetes/baski/pkg/server/generated"
 	"github.com/drewbernetes/baski/pkg/server/handler"
+	simple_s3 "github.com/drewbernetes/simple-s3"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -58,15 +58,15 @@ func (s *Server) NewServer(dev bool) (*http.Server, error) {
 		middleware = append(middleware, CORSAllowOriginAllMiddleware)
 	}
 
-	baskiS3, err := s3.New(s.Options.Endpoint, s.Options.AccessKey, s.Options.SecretKey, s.Options.Bucket, "")
+	baskiS3, err := simple_s3.New(s.Options.Endpoint, s.Options.AccessKey, s.Options.SecretKey, s.Options.Bucket, "")
 
 	if err != nil {
 		return nil, err
 	}
 
-	var dogKatS3 *s3.S3
+	var dogKatS3 *simple_s3.S3
 	if s.Options.EnableDogKat {
-		dogKatS3, err = s3.New(s.Options.Endpoint, s.Options.AccessKey, s.Options.SecretKey, s.Options.DogKatBucket, "")
+		dogKatS3, err = simple_s3.New(s.Options.Endpoint, s.Options.AccessKey, s.Options.SecretKey, s.Options.DogKatBucket, "")
 		if err != nil {
 			return nil, err
 		}

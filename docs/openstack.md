@@ -1,4 +1,4 @@
-### Openstack guidelines
+### OpenStack guidelines
 
 It is expected that you have a network and sufficient security groups in place to run this.<br>
 It will not create the network or security groups for you.

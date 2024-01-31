@@ -22,7 +22,6 @@ import (
 	"testing"
 )
 
-// TestGitClone Tests the cloning by cloning the image builder repo.
 func TestGitClone(t *testing.T) {
 	repo := "https://github.com/drew-viles/image-builder.git"
 	cloneLocation := "/tmp/test"

@@ -19,7 +19,7 @@ package trivy
 import (
 	"fmt"
 	"github.com/drewbernetes/baski/pkg/constants"
-	"github.com/drewbernetes/baski/pkg/util"
+	"github.com/drewbernetes/baski/pkg/util/interfaces"
 	"log"
 	"strings"
 )
@@ -51,7 +51,7 @@ func (t *TrivyOptions) GetFilename() string {
 }
 
 // GenerateTrivyCommand Creates the user data that will be passed to the server being created so that a .trivyignore can be added and the scan can be run as per the users wishes.
-func (t *TrivyOptions) GenerateTrivyCommand(s3 util.S3Interface) ([]byte, error) {
+func (t *TrivyOptions) GenerateTrivyCommand(s3 interfaces.S3Interface) ([]byte, error) {
 	trivyIgnoreData := generateTrivyFile(s3, t.GetFilename(), t.ignoreList)
 
 	log.Println("generating userdata")
@@ -100,7 +100,7 @@ echo done > /tmp/finished;
 }
 
 // generateTrivyFile generates the trivyignore file to be used during the scan.
-func generateTrivyFile(s3 util.S3Interface, ignoreFileName string, ignoreList []string) []byte {
+func generateTrivyFile(s3 interfaces.S3Interface, ignoreFileName string, ignoreList []string) []byte {
 	var ignoreListData, trivyIgnoreFile []byte
 	var err error
 

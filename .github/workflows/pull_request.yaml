@@ -3,7 +3,7 @@ name: Validate on Pull Request
 on:
   workflow_dispatch:
   pull_request:
-    types: [ opened, reopened, synchronized ]
+    types: [ opened, reopened, synchronize ]
 
 jobs:
   lint:
