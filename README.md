@@ -21,9 +21,10 @@ The scanning and signing functionality are separate from the build meaning these
 
 | Cloud Provider                 |
 |--------------------------------|
-| [Openstack](docs/openstack.md) |
+| [OpenStack](docs/openstack.md) |
+| [Kubevirt](docs/kubevirt.md)   |
 
-*More clouds could be supported but may not be maintained by Drewbernetes.*
+*More clouds could be supported but may not be maintained directly by Drewbernetes.*
 
 # Usage
 
@@ -47,7 +48,7 @@ For more flags and more info, run `baski --help`
 ### Running locally
 
 If you wish to run it locally then you can either build the binary and run it, or you can run it in docker by doing the
-following:
+following example for OpenStack:
 
 ```shell
 docker build -t baski:v0.0.0 -f docker/baski/Dockerfile .

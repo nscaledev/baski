@@ -19,8 +19,8 @@ package handler
 import (
 	"fmt"
 	"github.com/drewbernetes/baski/pkg/mock"
-	"github.com/drewbernetes/baski/pkg/s3"
 	th "github.com/drewbernetes/baski/testhelpers"
+	simple_s3 "github.com/drewbernetes/simple-s3"
 	"go.uber.org/mock/gomock"
 	"io"
 	"log"
@@ -36,12 +36,12 @@ func TestNew(t *testing.T) {
 	secret := "def"
 	bucket := "a_bucket"
 
-	b, err := s3.New(endpoint, access, secret, bucket, "")
+	b, err := simple_s3.New(endpoint, access, secret, bucket, "")
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	d, err := s3.New(endpoint, access, secret, bucket, "")
+	d, err := simple_s3.New(endpoint, access, secret, bucket, "")
 	if err != nil {
 		log.Println(err)
 		return
