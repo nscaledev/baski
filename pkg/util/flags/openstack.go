@@ -107,12 +107,12 @@ func (q *OpenStackFlags) AddFlags(cmd *cobra.Command, viperPrefix string) {
 	BoolVarWithViper(cmd, &q.UseFloatingIP, viperPrefix, "use-floating-ip", true, "Whether to use a floating IP for the instance")
 	StringVarWithViper(cmd, &q.FloatingIPNetworkName, viperPrefix, "floating-ip-network-name", "public1", "The Name of the network in which to create the floating ip")
 	StringVarWithViper(cmd, &q.SecurityGroup, viperPrefix, "security-group", "", "Specify the security groups to attach")
-	StringVarWithViper(cmd, &q.ImageVisibility, viperPrefix, "image-visibility", "private", "Change the image visibility in Openstack - you need to ensure the use you're authenticating with has permissions to do so or this will fail")
+	StringVarWithViper(cmd, &q.ImageVisibility, viperPrefix, "image-visibility", "", "Change the image visibility in Openstack - you need to ensure the use you're authenticating with has permissions to do so or this will fail")
 	StringVarWithViper(cmd, &q.ImageDiskFormat, viperPrefix, "image-disk-format", "", "The image disk format in Openstack")
 	StringVarWithViper(cmd, &q.UseBlockStorageVolume, viperPrefix, "use-blockstorage-volume", "", "Use Block Storage service volume for the instance root volume instead of Compute service local volume")
 	StringVarWithViper(cmd, &q.VolumeType, viperPrefix, "volume-type", "", "Type of the Block Storage service volume. If this isn't specified, the default enforced by your OpenStack cluster will be used")
 	IntVarWithViper(cmd, &q.VolumeSize, viperPrefix, "volume-size", 0, "Size of the Block Storage service volume in GB. If this isn't specified, it is set to source image min disk value (if set) or calculated from the source image bytes size. Note that in some cases this needs to be specified, if use_blockstorage_volume is true")
-	
+
 	q.OpenStackCoreFlags.AddFlags(cmd, viperPrefix)
 	q.OpenStackInstanceFlags.AddFlags(cmd, viperPrefix)
 

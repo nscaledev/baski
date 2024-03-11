@@ -147,6 +147,8 @@ scan:
     # How many concurrent scans to perform.
     concurrency: 2
   # Override the cloud.[provider].flavor for the scan. This can help avoid using a large or gpu enabled node just for scanning.
+  # This is only really needed if you're using a single config for all steps of Baski.
+  # If Baski is run in a pipeline, the scan step may generate its own config on demand and therefore the cloud.[provider].flavor would be sufficient.
   flavor-name: "not-so-spicy-meatball"
   # Whether to auto-delete the image. This has been added for automation purposes in the scenario where the image is built then scanned right away.
   # Should the scan fail then the image shouldn't be available publicly and so can be automatically deleted from the infrastructure to make sure a vulnerable image is not deployed.
