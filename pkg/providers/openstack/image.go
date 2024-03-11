@@ -125,7 +125,7 @@ func (c *ImageClient) FetchImage(imgID string) (*images.Image, error) {
 }
 
 // TagImage Tags the image with the passed or failed property.
-func (s *ImageClient) TagImage(properties map[string]interface{}, imgID, value, tagName string) error {
+func (c *ImageClient) TagImage(properties map[string]interface{}, imgID, value, tagName string) error {
 	// Default to replace unless the field isn't found below
 	operation := images.ReplaceOp
 
@@ -133,9 +133,25 @@ func (s *ImageClient) TagImage(properties map[string]interface{}, imgID, value, 
 	if err != nil || field == nil {
 		operation = images.AddOp
 	}
-	_, err = s.ModifyImageMetadata(imgID, tagName, value, operation)
+	_, err = c.ModifyImageMetadata(imgID, tagName, value, operation)
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+// ChangeImageVisibility modifies the visibility of the image in OpenStack
+func (c *ImageClient) ChangeImageVisibility(imgID string, visibility images.ImageVisibility) error {
+	opts := images.UpdateOpts{
+		images.UpdateVisibility{Visibility: visibility},
+	}
+
+	// Throw away the image result as we don't need it moving forward here. Either it updated, or it didn't
+	_, err := images.Update(c.client, imgID, opts).Extract()
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

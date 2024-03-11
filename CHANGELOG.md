@@ -1,5 +1,12 @@
 # Changelog
 
+## [ 2024/03/11 - v1.1.1 ]
+
+### Changed/Added
+
+* Setting images to private by default and will only set to public once a scan has passed successfully - this can still
+  be overridden at the config level.
+
 ## [ 2024/02/29 - v1.1.0 ]
 
 ### BREAKING CHANGES

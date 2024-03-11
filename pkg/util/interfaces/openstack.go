@@ -31,6 +31,7 @@ type OpenStackImageClient interface {
 	RemoveImage(imgID string) error
 	FetchImage(imgID string) (*images.Image, error)
 	TagImage(properties map[string]interface{}, imgID, value, tagName string) error
+	ChangeImageVisibility(imgID string, visibility images.ImageVisibility) error
 }
 
 type OpenStackNetworkClient interface {

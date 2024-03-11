@@ -46,6 +46,9 @@ It does the following:
 * Generates a report file that you can read with your eyes or via other means
 
 If the checks for CVE flags/config values are set then it will bail out and generate a report with the CVEs that caused it to do so.
+
+If a scan succeeds and cloud.[provider].image-visibility hasn't been set, then it will be made public. Otherwise it'll be left as private.
+If a visibility has been set in the config, this will be respected and no changes to the image visibility will be made.
 `,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.SetOptionsFromViper()

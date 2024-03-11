@@ -147,7 +147,7 @@ func retrieveNewOpenStackImageID() (string, error) {
 	return i, nil
 }
 
-// OpenStackScanProvisioner
+// OpenStackScanProvisioner contains the parameters required for scanning images.
 type OpenStackScanProvisioner struct {
 	Opts          *flags.ScanOptions
 	imageClient   interfaces.OpenStackImageClient
@@ -157,7 +157,7 @@ type OpenStackScanProvisioner struct {
 	imageID       string
 }
 
-// newOpenStackScanner
+// newOpenStackScanner returns a new instance of OpenStackScanProvisioner
 func newOpenStackScanner(o *flags.ScanOptions) *OpenStackScanProvisioner {
 	p := &OpenStackScanProvisioner{
 		Opts: o,
@@ -166,7 +166,7 @@ func newOpenStackScanner(o *flags.ScanOptions) *OpenStackScanProvisioner {
 	return p
 }
 
-// Prepare
+// Prepare the requirements for scanning images. this includes setting up the OpenStack clients so that communication with OpenStack is successful.
 func (s *OpenStackScanProvisioner) Prepare() error {
 	var err error
 	o := s.Opts
@@ -196,7 +196,8 @@ func (s *OpenStackScanProvisioner) Prepare() error {
 	return nil
 }
 
-// ScanImages
+// ScanImages will parse the input of imageID or wildcard to determine whether a single or multiple scan needs to occur.
+// The image is then scanned and the results uploaded to S3.
 func (s *OpenStackScanProvisioner) ScanImages() error {
 	var err error
 	o := s.Opts
@@ -284,6 +285,21 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 		return err
 	}
 
+	// Check if a visibility option has been supplied.
+	// If so, we'll leave things as they are otherwise we'll control it.
+	if s.Opts.OpenStackFlags.ImageVisibility == "" {
+		// If the image has no vulnerabilities, we can set the image to public otherwise default to private.
+		visibility := images.ImageVisibilityPrivate
+		if len(sc.Vulns) == 0 {
+			visibility = images.ImageVisibilityPublic
+		}
+
+		err = s.imageClient.ChangeImageVisibility(sc.Img.ID, visibility)
+		if err != nil {
+			return err
+		}
+	}
+
 	// If the image is not set to auto delete, tag the image with the check result.
 	if !o.AutoDeleteImage {
 		err = sc.TagImage()
@@ -319,11 +335,12 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 	return nil
 }
 
+// OpenStackSignProvisioner contains the parameters required for signing images.
 type OpenStackSignProvisioner struct {
 	Opts *flags.SignOptions
 }
 
-// newOpenStackSigner
+// newOpenStackSigner returns a new instance of OpenStackSignProvisioner.
 func newOpenStackSigner(o *flags.SignOptions) *OpenStackSignProvisioner {
 	p := &OpenStackSignProvisioner{
 		Opts: o,
@@ -332,7 +349,7 @@ func newOpenStackSigner(o *flags.SignOptions) *OpenStackSignProvisioner {
 	return p
 }
 
-// SignImage
+// SignImage will take the digest of the signing process and tag the image with the appropriate metadata field.
 func (s *OpenStackSignProvisioner) SignImage(digest string) error {
 	o := s.Opts
 	cloudProvider := ostack.NewCloudsProvider(o.OpenStackCoreFlags.CloudName)
@@ -355,7 +372,8 @@ func (s *OpenStackSignProvisioner) SignImage(digest string) error {
 	return nil
 }
 
-// ValidateImage
+// ValidateImage can validate the signing of an image using the supplied key.
+// It will search for the digest metadata/property on the image and attempt to validate it.
 func (s *OpenStackSignProvisioner) ValidateImage(key []byte) error {
 	o := s.Opts
 	cloudProvider := ostack.NewCloudsProvider(o.OpenStackCoreFlags.CloudName)
