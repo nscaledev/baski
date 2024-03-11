@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image:
+  repository: registry.hudson-viles.uk/public/baski-server
+  pullPolicy: IfNotPresent
+  tag: "v0.0.0"
+
+server:
+  dev: false
+  existingSecretName: "baski-server-s3-credentials"
+  baskiBucket: "baski"
+  enableDogkat: "true"
+  dogKatBucket: "dogkat"
+  osCloud: "image-builder"
