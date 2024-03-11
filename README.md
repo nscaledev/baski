@@ -15,7 +15,10 @@ The scanning and signing functionality are separate from the build meaning these
 
 # Scope
 
-⚠️Currently in beta at the moment.
+✅ Stable
+
+_However, no responsibility is held for anything that may go wrong with your images - it's been tested to the best of my
+ability, but you know, hidden bugs exist in all projects_
 
 # Supported clouds
 
@@ -43,7 +46,7 @@ $HOME/.baski/
 
 ### More info
 
-For more flags and more info, run `baski --help`
+For more flags and info, run `baski --help`
 
 ### Running locally
 
