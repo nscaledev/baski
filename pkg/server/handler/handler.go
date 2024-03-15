@@ -139,6 +139,10 @@ func (h *Handler) ApiV1GetTest(w http.ResponseWriter, r *http.Request, imageId g
 	}
 	res, err := fetchTestData(h, imageId)
 	if err != nil {
+		if strings.Contains(err.Error(), "NoSuchKey") {
+			util.JSON(w, http.StatusOK, map[string]string{"error": fmt.Sprintf("no scan data: %s\n", err.Error())})
+			return
+		}
 		util.JSON(w, http.StatusOK, map[string]string{"error": err.Error()})
 		return
 	}
@@ -244,7 +248,6 @@ func (h *Handler) ApiV1GetImage(w http.ResponseWriter, r *http.Request, imageId 
 		if err != nil {
 			// Just print an error here as we will want to continue with the scan data at the minimum
 			log.Println(err)
-			return
 		}
 	}
 

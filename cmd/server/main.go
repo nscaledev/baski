@@ -53,6 +53,8 @@ func start() *cobra.Command {
 		Short: "Runs the api server",
 		Long: `Runs the api server to which a front end will connect to pull results.
 
+*** Currently only works with Openstack ***
+
 An Openstack cloud file is required to be read and the BASKI_OS_CLOUD var should be passed for parsing said file.
 There is support for pulling DogKat results too. It is expected that the endpoint, access key and secret key have permissions to read from the DogKat bucket.
 The following environment variables are required to ensure as flags are not supported wrt s3 credentials.
@@ -61,6 +63,7 @@ This is because it's expected this will be run in containers/kubernetes and as s
   * BASKI_S3_ACCESSKEY
   * BASKI_S3_SECRETKEY
   * BASKI_S3_BUCKET
+  * BASKI_S3_REGION
   * BASKI_ENABLE_DOGKAT
   * BASKI_DOGKAT_BUCKET
   * BASKI_OS_CLOUD
@@ -85,6 +88,7 @@ The server runs on 0.0.0.0:8080 by default and this can be overridden via the fl
 					Endpoint:      viper.Get("S3_ENDPOINT").(string),
 					AccessKey:     viper.Get("S3_ACCESSKEY").(string),
 					SecretKey:     viper.Get("S3_SECRETKEY").(string),
+					Region:        viper.Get("S3_REGION").(string),
 					Bucket:        viper.Get("S3_BUCKET").(string),
 					EnableDogKat:  enableDogKat,
 					DogKatBucket:  viper.Get("DOGKAT_BUCKET").(string),

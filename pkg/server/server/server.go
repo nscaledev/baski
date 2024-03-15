@@ -31,6 +31,7 @@ type Options struct {
 	Endpoint      string
 	AccessKey     string
 	SecretKey     string
+	Region        string
 	Bucket        string
 	EnableDogKat  bool
 	DogKatBucket  string
@@ -46,19 +47,12 @@ func (s *Server) NewServer(dev bool) (*http.Server, error) {
 	middleware := []generated.MiddlewareFunc{}
 	r := mux.NewRouter()
 
-	// Here we decide how to handle CORS.
-	// If it's dev, we allow the lot if it's not, we only allow the defaults for any OPTION methods
-	if !dev {
-		r.Use(mux.CORSMethodMiddleware(r))
-	} else {
-		r.Methods(http.MethodOptions).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w = OptionsPreflightAllow(w)
-			w.WriteHeader(http.StatusOK)
-		})
-		middleware = append(middleware, CORSAllowOriginAllMiddleware)
+	r.Use(mux.CORSMethodMiddleware(r))
+	if dev {
+		middleware = append(middleware, corsAllowOriginAllMiddleware)
 	}
 
-	baskiS3, err := simple_s3.New(s.Options.Endpoint, s.Options.AccessKey, s.Options.SecretKey, s.Options.Bucket, "")
+	baskiS3, err := simple_s3.New(s.Options.Endpoint, s.Options.AccessKey, s.Options.SecretKey, s.Options.Bucket, s.Options.Region)
 
 	if err != nil {
 		return nil, err
@@ -66,7 +60,7 @@ func (s *Server) NewServer(dev bool) (*http.Server, error) {
 
 	var dogKatS3 *simple_s3.S3
 	if s.Options.EnableDogKat {
-		dogKatS3, err = simple_s3.New(s.Options.Endpoint, s.Options.AccessKey, s.Options.SecretKey, s.Options.DogKatBucket, "")
+		dogKatS3, err = simple_s3.New(s.Options.Endpoint, s.Options.AccessKey, s.Options.SecretKey, s.Options.DogKatBucket, s.Options.Region)
 		if err != nil {
 			return nil, err
 		}
@@ -87,19 +81,10 @@ func (s *Server) NewServer(dev bool) (*http.Server, error) {
 	return server, nil
 }
 
-// CORSAllowOriginAllMiddleware sets the header for Access-Control-Allow-Origin = "*"
-func CORSAllowOriginAllMiddleware(next http.HandlerFunc) http.HandlerFunc {
+// corsAllowOriginAllMiddleware sets the header for Access-Control-Allow-Origin = "*"
+func corsAllowOriginAllMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = OptionsPreflightAllow(w)
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 		next(w, r)
 	}
-}
-
-// OptionsPreflightAllow sets the header for Access-Control-Allow-Origin = "*"
-func OptionsPreflightAllow(w http.ResponseWriter) http.ResponseWriter {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token")
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	return w
 }

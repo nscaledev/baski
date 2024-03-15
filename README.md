@@ -65,15 +65,42 @@ baski build / scan / sign
 ### Baski Server
 
 Baski server has been built so that all scan results are easily obtainable from an S3 endpoint. Run the server as
-follows, and then you can query the server using the API.
-The CVE results are searched for based on the locations generated during the `sign single` and `sign multiple`
+follows, and then you can query the server using the API. The CVE results are searched for based on the locations generated during the `sign` command.
+
+Currently only really works with OpenStack.
 
 ```shell
 docker build -t baski-server:v0.0.0 -f docker/server/Dockerfile .
 
-docker run --name baski-server -e BASKI_S3_ENDPOINT=https://SOME-ENDPOINT -e BASKI_S3_ACCESSKEY=SOME-ACCESS-KEY -e BASKI_S3_SECRETKEY=SOME-SECRET-KEY -e BASKI_S3_BUCKET="baski" -e BASKI_ENABLE_DOGKAT="true" -e BASKI_DOGKAT_BUCKET="dogkat" -p 8080 -it --rm baski-server:v0.0.0
+docker run --name baski-server \ 
+  -e BASKI_S3_ENDPOINT=https://SOME-ENDPOINT \
+  -e BASKI_S3_ACCESSKEY=SOME-ACCESS-KEY \
+  -e BASKI_S3_SECRETKEY=SOME-SECRET-KEY \
+  -e BASKI_S3_BUCKET="baski" \
+  -e BASKI_S3_REGION="us-east-1" \
+  -e BASKI_ENABLE_DOGKAT="true" \
+  -e BASKI_DOGKAT_BUCKET="dogkat" \
+  -e BASKI_OS_CLOUD="openstack" \
+  -v ~/.config/openstack/clouds.yaml:/home/baski/.config/openstack/clouds.yaml \
+  -p 8080 \
+  -it \
+  --rm \
+  baski-server:v0.0.0
 
 curl http://127.0.0.1:DOCKER-PORT/api/v1/scan/SOME-IMAGE-ID
+```
+
+You can also run this directly without having to use docker - this requires a valid config for OpenStack in `~/.config/openstack/clouds.yaml`.
+```shell
+export BASKI_S3_ENDPOINT=https://openstack.poc.dev.nscale.com:6780
+export BASKI_S3_ACCESSKEY=da0a376dfd784ea989bc88a767d8d4e6
+export BASKI_S3_SECRETKEY=5eaa1cd1619d4a67ab322dcd069e87a1
+export BASKI_S3_BUCKET="baski"
+export BASKI_S3_REGION="us-east-1"
+export BASKI_ENABLE_DOGKAT="true"
+export BASKI_DOGKAT_BUCKET="dogkat"
+export BASKI_OS_CLOUD="nscale-poc-image-builder"
+go run cmd/server/main.go
 ```
 
 # TODO
