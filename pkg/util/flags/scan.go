@@ -70,7 +70,7 @@ func (o *ScanOptions) AddFlags(cmd *cobra.Command) {
 	BoolVarWithViper(cmd, &o.SkipCVECheck, viperScanPrefix, "skip-cve-check", false, "If true, the image will be allowed even if a vulnerability is detected.")
 	Float64VarWithViper(cmd, &o.MaxSeverityScore, viperScanPrefix, "max-severity-score", 7.0, "Can be anything from 0.1 to 10.0. Anything equal to or above this value will cause a failure. (Unless skip-cve-check is supplied)")
 	StringVarWithViper(cmd, &o.MaxSeverityType, viperScanPrefix, "max-severity-type", "MEDIUM", "Accepted values are NONE, LOW, MEDIUM, HIGH, CRITICAL. This value will be what the score is checked against For example, a LOW 7.0 would be ignored if the value was HIGH with a `max-severity-score` of 7.0. (Unless skip-cve-check is supplied)")
-	StringVarWithViper(cmd, &o.ScanBucket, viperScanPrefix, "scan-bucket", "", "The bucket name to use during scans")
+	StringVarWithViper(cmd, &o.ScanBucket, viperScanPrefix, "scan-bucket", "baski", "The bucket name to use during scans")
 	StringVarWithViper(cmd, &o.TrivyignorePath, viperScanPrefix, "trivyignore-path", "", "The path in the scan-bucket where the trivyignore file is located")
 	StringVarWithViper(cmd, &o.TrivyignoreFilename, viperScanPrefix, "trivyignore-filename", "", "The filename of the trivyignore file")
 	StringSliceVarWithViper(cmd, &o.TrivyignoreList, viperScanPrefix, "trivyignore-list", []string{}, "A list of CVEs to ignore")

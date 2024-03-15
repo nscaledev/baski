@@ -206,6 +206,20 @@ func (m *MockOpenStackImageClient) EXPECT() *MockOpenStackImageClientMockRecorde
 	return m.recorder
 }
 
+// ChangeImageVisibility mocks base method.
+func (m *MockOpenStackImageClient) ChangeImageVisibility(imgID string, visibility images.ImageVisibility) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ChangeImageVisibility", imgID, visibility)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ChangeImageVisibility indicates an expected call of ChangeImageVisibility.
+func (mr *MockOpenStackImageClientMockRecorder) ChangeImageVisibility(imgID, visibility any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeImageVisibility", reflect.TypeOf((*MockOpenStackImageClient)(nil).ChangeImageVisibility), imgID, visibility)
+}
+
 // FetchAllImages mocks base method.
 func (m *MockOpenStackImageClient) FetchAllImages(wildcard string) ([]images.Image, error) {
 	m.ctrl.T.Helper()
