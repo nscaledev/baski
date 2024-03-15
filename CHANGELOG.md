@@ -1,6 +1,6 @@
 # Changelog
 
-## [ 2024/03/xx - v1.2.0 ]
+## [ 2024/03/15 - v1.2.0 ]
 
 ### BREAKING CHANGES
 
