@@ -10,7 +10,7 @@ COPY pkg ./pkg/
 
 RUN go mod download
 
-RUN CGO_ENABLED=0 go build -o /tmp/baski /app/cmd/baski/main.go
+RUN CGO_ENABLED=0 go build -o /tmp/baski /app/cmd/main.go
 
 
 FROM cgr.dev/chainguard/wolfi-base:latest
