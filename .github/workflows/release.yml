@@ -23,13 +23,12 @@ jobs:
           GOARCH=amd64
           GOOS=linux
           BINARY_NAME=${{github.repository}}-$GOOS-$GOARCH
-          SERVER_BINARY_NAME=${{github.repository}}-server-$GOOS-$GOARCH
           echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
           echo "GOOS=$GOOS" >> $GITHUB_ENV
           echo "GOARCH=$GOARCH" >> $GITHUB_ENV
       - name: Build Baski
         run: |
-          CGO_ENABLED=0 go build -o "$BINARY_NAME" cmd/baski/main.go
+          CGO_ENABLED=0 go build -o "$BINARY_NAME" cmd/main.go
       - name: Release Notes
         run: |
           git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"
