@@ -32,6 +32,8 @@ import (
 )
 
 type GlobalBuildConfig struct {
+	ContainerdSHA256     string            `json:"containerd_sha256,omitempty"`
+	ContainerdVersion    string            `json:"containerd_version,omitempty"`
 	CniVersion           string            `json:"kubernetes_cni_semver,omitempty"`
 	CniDebVersion        string            `json:"kubernetes_cni_deb_version,omitempty"`
 	CrictlVersion        string            `json:"crictl_version,omitempty"`
@@ -50,6 +52,8 @@ type GlobalBuildConfig struct {
 
 func NewCoreBuildconfig(o *flags.BuildOptions) (*GlobalBuildConfig, string, error) {
 	b := &GlobalBuildConfig{
+		ContainerdSHA256:     o.ContainerdSHA256,
+		ContainerdVersion:    o.ContainerdVersion,
 		CniVersion:           "v" + o.CniVersion,
 		CniDebVersion:        o.CniDebVersion,
 		CrictlVersion:        o.CrictlVersion,
@@ -126,11 +130,11 @@ func NewCoreBuildconfig(o *flags.BuildOptions) (*GlobalBuildConfig, string, erro
 		}
 
 		if o.AddFalco && !o.AddTrivy {
-			securityVars = "install_falco=true"
+			securityVars = "security_install_falco=true"
 		} else if !o.AddFalco && o.AddTrivy {
-			securityVars = "install_trivy=true"
+			securityVars = "security_install_trivy=true"
 		} else {
-			securityVars = "install_falco=true install_trivy=true"
+			securityVars = "security_install_falco=true security_install_trivy=true"
 		}
 		if len(ansibleUserVars) == 0 {
 			ansibleUserVars = securityVars

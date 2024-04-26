@@ -35,6 +35,8 @@ type BuildOptions struct {
 	ImagePrefix             string
 	ImageRepo               string
 	ImageRepoBranch         string
+	ContainerdSHA256        string
+	ContainerdVersion       string
 	CrictlVersion           string
 	CniVersion              string
 	CniDebVersion           string
@@ -65,6 +67,8 @@ func (o *BuildOptions) SetOptionsFromViper() {
 	o.ImagePrefix = viper.GetString(fmt.Sprintf("%s.image-prefix", viperBuildPrefix))
 	o.ImageRepo = viper.GetString(fmt.Sprintf("%s.image-repo", viperBuildPrefix))
 	o.ImageRepoBranch = viper.GetString(fmt.Sprintf("%s.image-repo-branch", viperBuildPrefix))
+	o.ContainerdSHA256 = viper.GetString(fmt.Sprintf("%s.containerd-sha256", viperBuildPrefix))
+	o.ContainerdVersion = viper.GetString(fmt.Sprintf("%s.containerd-version", viperBuildPrefix))
 	o.CrictlVersion = viper.GetString(fmt.Sprintf("%s.crictl-version", viperBuildPrefix))
 	o.CniVersion = viper.GetString(fmt.Sprintf("%s.cni-version", viperBuildPrefix))
 	o.CniDebVersion = viper.GetString(fmt.Sprintf("%s.cni-deb-version", viperBuildPrefix))
@@ -105,6 +109,8 @@ func (o *BuildOptions) AddFlags(cmd *cobra.Command, imageBuilderRepo string) {
 	StringVarWithViper(cmd, &o.ImagePrefix, viperBuildPrefix, "image-prefix", "kube", "This will prefix the image with the value provided. Defaults to 'kube' producing an image name of kube-yymmdd-xxxxxxxx")
 	StringVarWithViper(cmd, &o.ImageRepo, viperBuildPrefix, "image-repo", strings.Join([]string{imageBuilderRepo, "git"}, "."), "The imageRepo from which the image builder should be deployed")
 	StringVarWithViper(cmd, &o.ImageRepoBranch, viperBuildPrefix, "image-repo-branch", "main", "The branch to checkout from the cloned imageRepo")
+	StringVarWithViper(cmd, &o.ContainerdSHA256, viperBuildPrefix, "containerd-sha256", "9be621c0206b5c20a1dea05fae12fc698e5083cc81f65c9d918c644090696d19", "The sha256 of containerd - required when setting contained")
+	StringVarWithViper(cmd, &o.ContainerdVersion, viperBuildPrefix, "containerd-version", "1.7.13", "The containerd version to include in the image")
 	StringVarWithViper(cmd, &o.CniVersion, viperBuildPrefix, "cni-version", "1.2.0", "The CNI plugins version to include to the built image")
 	StringVarWithViper(cmd, &o.CrictlVersion, viperBuildPrefix, "crictl-version", "1.25.0", "The crictl-tools version to add to the built image")
 	StringVarWithViper(cmd, &o.KubeVersion, viperBuildPrefix, "kubernetes-version", "1.25.3", "The Kubernetes version to add to the built image")
@@ -136,4 +142,5 @@ func (o *BuildOptions) AddFlags(cmd *cobra.Command, imageBuilderRepo string) {
 
 	cmd.MarkFlagsRequiredTogether("nvidia-driver-version", "nvidia-bucket", "nvidia-installer-location", "nvidia-tok-location", "nvidia-gridd-feature-type")
 	cmd.MarkFlagsRequiredTogether("cni-version", "crictl-version", "kubernetes-version")
+	cmd.MarkFlagsRequiredTogether("containerd-version", "containerd-sha256")
 }

@@ -29,8 +29,6 @@ import (
 
 const (
 	// goApache2LicenseHeader is an exact match for a license header.
-	// TODO: may want to make this fuzzy (e.g. the date) and make it
-	// a regex match.
 	goApache2LicenseHeader = `/*
 Copyright 2024 Drewbernetes.
 

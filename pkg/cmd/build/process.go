@@ -64,7 +64,7 @@ func fetchBuildRepo(path string, o *flags.BuildOptions) error {
 
 	_, err := gitRepo.GitClone(imageRepo, path, branch)
 	if err != nil {
-		return fmt.Errorf("Error cloning repo: %s", err)
+		return fmt.Errorf("error cloning repo: %s", err)
 	}
 	return nil
 }
