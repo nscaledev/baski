@@ -1,5 +1,11 @@
 # Changelog
 
+## [ 2024/04/26 - v1.2.1 ]
+
+### Add/Updated
+* Added ability to override default contained version
+* Updated go modules
+
 ## [ 2024/03/15 - v1.2.0 ]
 
 ### BREAKING CHANGES

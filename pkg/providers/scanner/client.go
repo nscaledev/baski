@@ -11,15 +11,6 @@ import (
 	"time"
 )
 
-//TODO: This may not be needed afterall
-//type ScannerInterface interface {
-//	RunScan(o *flags.ScanOptions) error
-//	FetchScanResults() error
-//	CheckResults() error
-//	TagImage() error
-//	UploadResultsToS3() error
-//}
-
 type BaseScanner struct {
 	ResultsFile string
 	MetaTag     string

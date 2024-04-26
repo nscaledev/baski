@@ -124,9 +124,9 @@ func (p *OpenStackBuildProvisioner) PostBuildAction() error {
 // retrieveNewOpenStackImageID identifies the new ImageID from the output text so that it can be used/retrieved later.
 func retrieveNewOpenStackImageID() (string, error) {
 	var i string
-
-	//TODO: If the output goes to stdOUT in buildImage,
-	// we need to figure out if we can pull this from the openstack instance instead.
+	//TODO: The output goes to STDOUT during buildImage,
+	// we need to figure out if we can pull this from the openstack instance instead
+	// to remove the requirement of parsing STDOUT.
 	f, err := os.Open("/tmp/out-build.txt")
 	if err != nil {
 		return "", err

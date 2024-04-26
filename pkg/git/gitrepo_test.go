@@ -23,6 +23,8 @@ import (
 )
 
 func TestGitClone(t *testing.T) {
+	//FIXME: This check is in place until the security branch in this repo go upstream.
+	// Until it has been added, we must force users over to this repo as it's the only one that has these new additions.
 	repo := "https://github.com/drew-viles/image-builder.git"
 	cloneLocation := "/tmp/test"
 	err := os.RemoveAll(cloneLocation)

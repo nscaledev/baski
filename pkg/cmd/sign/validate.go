@@ -57,7 +57,6 @@ This just validates a signature. It's useful for verifying a signed image.
 					return err
 				}
 			}
-			// TODO: We should look at grabbing the digest from the image tags so the user doesn't have to put it directly in.
 
 			signer := provisoner.NewSigner(o)
 			err = signer.ValidateImage(key)
