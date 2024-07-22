@@ -1,5 +1,10 @@
 # Changelog
 
+## [ 2024/xx/xx - v1.2.x]
+
+### Add/Updated
+* Updated go modules
+
 ## [ 2024/04/26 - v1.2.1 ]
 
 ### Add/Updated
