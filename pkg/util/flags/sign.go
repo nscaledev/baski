@@ -33,6 +33,7 @@ type SignOptions struct {
 	VaultMountPath  string
 	VaultSecretPath string
 	ImageID         string
+	DigestPrefix    string
 	PrivateKey      string
 	PublicKey       string
 }
@@ -40,6 +41,7 @@ type SignOptions struct {
 // SetOptionsFromViper configures additional options passed in via viper for the struct from any subcommands.
 func (o *SignOptions) SetOptionsFromViper() {
 	o.ImageID = viper.GetString(fmt.Sprintf("%s.image-id", viperSignPrefix))
+	o.DigestPrefix = viper.GetString(fmt.Sprintf("%s.digest-prefix", viperSignPrefix))
 	o.VaultURL = viper.GetString(fmt.Sprintf("%s.url", viperVaultPrefix))
 	o.VaultToken = viper.GetString(fmt.Sprintf("%s.token", viperVaultPrefix))
 	o.VaultMountPath = viper.GetString(fmt.Sprintf("%s.mount-path", viperVaultPrefix))
@@ -54,14 +56,15 @@ func (o *SignOptions) SetOptionsFromViper() {
 
 // AddFlags adds additional flags to the subcommands that call this.
 func (o *SignOptions) AddFlags(cmd *cobra.Command) {
-	StringVarWithViper(cmd, &o.ImageID, viperSignPrefix, "image-id", "", "The image ID of the image to sign")
-	StringVarWithViper(cmd, &o.VaultURL, viperVaultPrefix, "url", "", "The Vault URL from which you will pull the private key")
-	StringVarWithViper(cmd, &o.VaultToken, viperVaultPrefix, "token", "", "The token used to log into vault")
-	StringVarWithViper(cmd, &o.VaultMountPath, viperVaultPrefix, "mount-path", "", "The mount path to the secret vault")
-	StringVarWithViper(cmd, &o.VaultSecretPath, viperVaultPrefix, "secret-name", "", "The name of the secret within the mount path")
+	StringVarWithViper(cmd, &o.ImageID, viperSignPrefix, "image-id", "", "--DEPRECATED-- USE THE CONFIG FILE. The image ID of the image to sign")
+	StringVarWithViper(cmd, &o.DigestPrefix, viperSignPrefix, "digest-prefix", "", "--DEPRECATED-- USE THE CONFIG FILE. If a prefix is required on the digest property, this can be set here. The result being prefix:digest")
+	StringVarWithViper(cmd, &o.VaultURL, viperVaultPrefix, "url", "", "--DEPRECATED-- USE THE CONFIG FILE. The Vault URL from which you will pull the private key")
+	StringVarWithViper(cmd, &o.VaultToken, viperVaultPrefix, "token", "", "--DEPRECATED-- USE THE CONFIG FILE. The token used to log into vault")
+	StringVarWithViper(cmd, &o.VaultMountPath, viperVaultPrefix, "mount-path", "", "--DEPRECATED-- USE THE CONFIG FILE. The mount path to the secret vault")
+	StringVarWithViper(cmd, &o.VaultSecretPath, viperVaultPrefix, "secret-name", "", "--DEPRECATED-- USE THE CONFIG FILE. The name of the secret within the mount path")
 
-	StringVarWithViper(cmd, &o.PrivateKey, viperSignPrefix, "private-key", "", "The path to the private key that will be used to sign the image")
-	StringVarWithViper(cmd, &o.PublicKey, viperSignPrefix, "public-key", "", "The path to the private key that will be used to sign the image")
+	StringVarWithViper(cmd, &o.PrivateKey, viperSignPrefix, "private-key", "", "--DEPRECATED-- USE THE CONFIG FILE. The path to the private key that will be used to sign the image")
+	StringVarWithViper(cmd, &o.PublicKey, viperSignPrefix, "public-key", "", "--DEPRECATED-- USE THE CONFIG FILE. The path to the private key that will be used to sign the image")
 
 	o.BaseOptions.AddFlags(cmd)
 	o.OpenStackCoreFlags.AddFlags(cmd, viperOpenStackPrefix)
@@ -84,6 +87,6 @@ func (o *SignGenerateOptions) SetOptionsFromViper() {
 
 // AddFlags adds flags to the 'generate' subcommand and binds them to the 'generate' options.
 func (o *SignGenerateOptions) AddFlags(cmd *cobra.Command) {
-	StringVarWithViper(cmd, &o.Path, viperGeneratePrefix, "path", "/tmp/baski", "A directory location in which to output the generated keys")
+	StringVarWithViper(cmd, &o.Path, viperGeneratePrefix, "path", "/tmp/baski", "--DEPRECATED-- USE THE CONFIG FILE. A directory location in which to output the generated keys")
 
 }

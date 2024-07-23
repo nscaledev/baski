@@ -41,7 +41,7 @@ func (k *KubeVirtFlags) SetOptionsFromViper() {
 
 func (k *KubeVirtFlags) AddFlags(cmd *cobra.Command, viperPrefix string) {
 	k.QEMUFlags.AddFlags(cmd, viperPrefix)
-	BoolVarWithViper(cmd, &k.StoreInS3, viperPrefix, "store-in-s3", false, "Whether to upload the disk image to S3")
-	StringVarWithViper(cmd, &k.ImageBucket, viperPrefix, "image-bucket", "10G", "The bucket in S3 to store the image in")
-	StringVarWithViper(cmd, &k.ImageNamespace, viperPrefix, "image-namespace", "vm-images", "The Namespace in which to deploy the data volumes for S3 images")
+	BoolVarWithViper(cmd, &k.StoreInS3, viperPrefix, "store-in-s3", false, "--DEPRECATED-- USE THE CONFIG FILE. Whether to upload the disk image to S3")
+	StringVarWithViper(cmd, &k.ImageBucket, viperPrefix, "image-bucket", "10G", "--DEPRECATED-- USE THE CONFIG FILE. The bucket in S3 to store the image in")
+	StringVarWithViper(cmd, &k.ImageNamespace, viperPrefix, "image-namespace", "vm-images", "--DEPRECATED-- USE THE CONFIG FILE. The Namespace in which to deploy the data volumes for S3 images")
 }

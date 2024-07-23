@@ -5,6 +5,9 @@
 ### Add/Updated
 * Updated go modules
 
+### Deprecated
+* All flags have been deprecated except a select few. The config file should be used from now on.
+
 ## [ 2024/04/26 - v1.2.1 ]
 
 ### Add/Updated

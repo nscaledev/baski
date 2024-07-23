@@ -15,5 +15,5 @@ func (o *BaseOptions) SetOptionsFromViper() {
 }
 
 func (o *BaseOptions) AddFlags(cmd *cobra.Command) {
-	StringVarWithViper(cmd, &o.InfraType, viperInfraPrefix, "type", "kubevirt", "Targets the settings to use in a config file if supplied or dictates which code runs for a build.")
+	StringVarWithViper(cmd, &o.InfraType, viperInfraPrefix, "type", "kubevirt", "--DEPRECATED-- USE THE CONFIG FILE. Targets the settings to use in a config file if supplied or dictates which code runs for a build.")
 }

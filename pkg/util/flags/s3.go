@@ -39,11 +39,11 @@ func (o *S3Flags) SetOptionsFromViper() {
 }
 
 func (o *S3Flags) AddFlags(cmd *cobra.Command) {
-	StringVarWithViper(cmd, &o.Endpoint, viperS3Prefix, "endpoint", "", "The endpoint of the bucket from which to download resources")
-	StringVarWithViper(cmd, &o.AccessKey, viperS3Prefix, "access-key", "", "The access key used to access the bucket from which to download resources")
-	StringVarWithViper(cmd, &o.SecretKey, viperS3Prefix, "secret-key", "", "The secret key used to access the bucket from which to download resources")
-	StringVarWithViper(cmd, &o.Region, viperS3Prefix, "region", "us-east-1", "The region of the S3 endpoint")
-	BoolVarWithViper(cmd, &o.IsCeph, viperS3Prefix, "is-ceph", false, "If the S3 endpoint is CEPH then set this to true to allow ansible to work with the endpoint")
+	StringVarWithViper(cmd, &o.Endpoint, viperS3Prefix, "endpoint", "", "--DEPRECATED-- USE THE CONFIG FILE. The endpoint of the bucket from which to download resources")
+	StringVarWithViper(cmd, &o.AccessKey, viperS3Prefix, "access-key", "", "--DEPRECATED-- USE THE CONFIG FILE. The access key used to access the bucket from which to download resources")
+	StringVarWithViper(cmd, &o.SecretKey, viperS3Prefix, "secret-key", "", "--DEPRECATED-- USE THE CONFIG FILE. The secret key used to access the bucket from which to download resources")
+	StringVarWithViper(cmd, &o.Region, viperS3Prefix, "region", "us-east-1", "--DEPRECATED-- USE THE CONFIG FILE. The region of the S3 endpoint")
+	BoolVarWithViper(cmd, &o.IsCeph, viperS3Prefix, "is-ceph", false, "--DEPRECATED-- USE THE CONFIG FILE. If the S3 endpoint is CEPH then set this to true to allow ansible to work with the endpoint")
 
 	cmd.MarkFlagsRequiredTogether("access-key", "secret-key")
 }
