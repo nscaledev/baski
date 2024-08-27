@@ -25,19 +25,24 @@ import (
 
 // OpenStackCoreFlags are the core requirements for any interaction with the openstack cloud.
 type OpenStackCoreFlags struct {
-	CloudsPath string
-	CloudName  string
+	CloudsPath     string
+	CloudName      string
+	MetadataPrefix string
 }
 
 // SetOptionsFromViper configures additional options passed in via viper for the struct.
 func (o *OpenStackCoreFlags) SetOptionsFromViper() {
 	o.CloudsPath = viper.GetString(fmt.Sprintf("%s.clouds-file", viperOpenStackPrefix))
 	o.CloudName = viper.GetString(fmt.Sprintf("%s.cloud-name", viperOpenStackPrefix))
+	o.MetadataPrefix = viper.GetString(fmt.Sprintf("%s.metadata-prefix", viperOpenStackPrefix))
+
 }
 
 func (o *OpenStackCoreFlags) AddFlags(cmd *cobra.Command, viperPrefix string) {
 	PersistentStringVarWithViper(cmd, &o.CloudsPath, viperPrefix, "clouds-file", "~/.config/openstack/clouds.yaml", "--DEPRECATED-- USE THE CONFIG FILE. The location of the openstack clouds.yaml file to use")
 	PersistentStringVarWithViper(cmd, &o.CloudName, viperPrefix, "cloud-name", "", "--DEPRECATED-- USE THE CONFIG FILE. The name of the cloud profile to use from the clouds.yaml file")
+	StringVarWithViper(cmd, &o.MetadataPrefix, viperPrefix, "metadata-prefix", "", "--DEPRECATED-- USE THE CONFIG FILE. If a prefix is required on any metadata properties, it can be set here. The result being <prefix>:<metadata>")
+
 	if err := cmd.RegisterFlagCompletionFunc("cloud-name", completion.CloudCompletionFunc); err != nil {
 		panic(err)
 	}

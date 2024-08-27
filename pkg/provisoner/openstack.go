@@ -364,7 +364,11 @@ func (s *OpenStackSignProvisioner) SignImage(digest string) error {
 		return err
 	}
 
-	err = i.TagImage(img.Properties, o.ImageID, digest, "digest")
+	digestPropertyName := "digest"
+	if s.Opts.OpenStackCoreFlags.MetadataPrefix != "" {
+		digestPropertyName = strings.Join([]string{s.Opts.OpenStackCoreFlags.MetadataPrefix, digestPropertyName}, ":")
+	}
+	err = i.TagImage(img.Properties, o.ImageID, digest, digestPropertyName)
 	if err != nil {
 		return err
 	}

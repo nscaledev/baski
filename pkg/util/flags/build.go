@@ -50,6 +50,8 @@ type BuildOptions struct {
 	AddTrivy                bool
 	AddGpuSupport           bool
 	GpuVendor               string
+	GpuModelSupport         string
+	GpuInstanceSupport      string
 	AMDVersion              string
 	AMDDebVersion           string
 	AMDUseCase              string
@@ -84,6 +86,8 @@ func (o *BuildOptions) SetOptionsFromViper() {
 	// GPU
 	o.AddGpuSupport = viper.GetBool(fmt.Sprintf("%s.enable-gpu-support", viperGpuPrefix))
 	o.GpuVendor = viper.GetString(fmt.Sprintf("%s.gpu-vendor", viperGpuPrefix))
+	o.GpuModelSupport = viper.GetString(fmt.Sprintf("%s.gpu-model-support", viperGpuPrefix))
+	o.GpuInstanceSupport = viper.GetString(fmt.Sprintf("%s.gpu-instance-support", viperGpuPrefix))
 	// AMD
 	o.AMDVersion = viper.GetString(fmt.Sprintf("%s.amd-driver-version", viperGpuPrefix))
 	o.AMDDebVersion = viper.GetString(fmt.Sprintf("%s.amd-deb-version", viperGpuPrefix))
