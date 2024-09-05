@@ -1,9 +1,11 @@
 package provisoner
 
 import (
+	"fmt"
 	"github.com/drewbernetes/baski/pkg/providers/packer"
 	"github.com/drewbernetes/baski/pkg/util/flags"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -76,23 +78,33 @@ func saveImageIDToFile(imgID string) error {
 
 // generateBuilderMetadata generates some glance metadata for the image.
 func generateBuilderMetadata(o *flags.BuildOptions) map[string]string {
-	gpu := "no_gpu"
-	if o.AddGpuSupport {
-		if o.GpuVendor == "nvidia" {
-			gpu = o.NvidiaVersion
-		} else if o.GpuVendor == "amd" {
-			gpu = o.AMDVersion
-		}
+	var gpuVendor string
+	gpuVersion := "no_gpu"
+	gpuVendor = strings.ToUpper(o.GpuVendor)
+	if gpuVendor == "NVIDIA" {
+		gpuVersion = fmt.Sprintf("v%s", o.NvidiaVersion)
+	} else if gpuVendor == "AMD" {
+		gpuVersion = fmt.Sprintf("v%s", o.AMDVersion)
 	}
 
 	meta := map[string]string{
-		"os":         o.BuildOS,
-		"k8s":        o.KubeVersion,
-		"gpu":        gpu,
-		"gpu_vendor": o.GpuVendor,
-		"date":       time.Now().Format(time.RFC3339),
+		"date": time.Now().Format(time.RFC3339),
+		"os":   o.BuildOS,
 	}
 
+	metaPrefix := o.OpenStackCoreFlags.MetadataPrefix
+	if o.AddGpuSupport {
+		gpuMeta := map[string]string{
+			fmt.Sprintf("%s:gpu_vendor", metaPrefix):         gpuVendor,
+			fmt.Sprintf("%s:gpu_models", metaPrefix):         strings.ToUpper(o.GpuModelSupport),
+			fmt.Sprintf("%s:gpu_driver_version", metaPrefix): gpuVersion,
+			fmt.Sprintf("%s:kubernetes_version", metaPrefix): fmt.Sprintf("v%s", o.KubeVersion),
+			fmt.Sprintf("%s:virtualization", metaPrefix):     o.GpuInstanceSupport,
+		}
+		for k, v := range gpuMeta {
+			meta[k] = v
+		}
+	}
 	if len(o.AdditionalMetadata) > 0 {
 		for k, v := range o.AdditionalMetadata {
 			meta[k] = v

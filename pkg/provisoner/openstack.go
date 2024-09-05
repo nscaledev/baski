@@ -330,7 +330,7 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 		if o.AutoDeleteImage {
 			errMsg = fmt.Sprintf("%s - %s", errMsg, ". The image has been removed from the infra.")
 		}
-		return fmt.Errorf(errMsg)
+		return fmt.Errorf("%s", errMsg)
 	}
 	return nil
 }
@@ -364,7 +364,11 @@ func (s *OpenStackSignProvisioner) SignImage(digest string) error {
 		return err
 	}
 
-	err = i.TagImage(img.Properties, o.ImageID, digest, "digest")
+	digestPropertyName := "digest"
+	if s.Opts.OpenStackCoreFlags.MetadataPrefix != "" {
+		digestPropertyName = strings.Join([]string{s.Opts.OpenStackCoreFlags.MetadataPrefix, digestPropertyName}, ":")
+	}
+	err = i.TagImage(img.Properties, o.ImageID, digest, digestPropertyName)
 	if err != nil {
 		return err
 	}
