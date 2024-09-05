@@ -51,7 +51,7 @@ func TestNewClient(t *testing.T) {
 	kubeconfigPath := "/tmp/kubeconfig"
 	err := os.WriteFile(kubeconfigPath, []byte(kubeconfig), 0700)
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 
 	tc := []struct {
@@ -74,7 +74,7 @@ func TestNewClient(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			client, err := NewClient(kubeconfigPath)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 
 			//Basic checks for now - much more advanced testing will be required!

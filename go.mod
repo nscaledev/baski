@@ -1,6 +1,6 @@
 module github.com/drewbernetes/baski
 
-go 1.23.0
+go 1.23.1
 
 require (
 	github.com/drewbernetes/simple-s3 v0.1.4

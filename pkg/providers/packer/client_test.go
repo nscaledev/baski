@@ -468,7 +468,7 @@ func TestNewCoreBuildconfig(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			conf, name, err := NewCoreBuildconfig(&v.options)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 
 			re := regexp.MustCompile(`kmi-\d{6}-\w{8}`)
@@ -493,12 +493,12 @@ func TestUpdatePackerBuildersJson(t *testing.T) {
 
 	err := os.MkdirAll(fullPath, 0755)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	err = os.WriteFile(filepath.Join(fullPath, "packer.json"), []byte(packerConf), 0644)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	modifierFunc := BuildersModifier{
@@ -531,12 +531,12 @@ func TestUpdatePackerBuildersJson(t *testing.T) {
 
 	err = UpdatePackerBuildersJson(dir, infra, modifierFunc)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	file, err := os.ReadFile(filepath.Join(fullPath, "packer.json"))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	if expected != string(file) {

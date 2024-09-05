@@ -330,7 +330,7 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 		if o.AutoDeleteImage {
 			errMsg = fmt.Sprintf("%s - %s", errMsg, ". The image has been removed from the infra.")
 		}
-		return fmt.Errorf(errMsg)
+		return fmt.Errorf("%s", errMsg)
 	}
 	return nil
 }
