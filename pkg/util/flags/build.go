@@ -108,7 +108,7 @@ func (o *BuildOptions) SetOptionsFromViper() {
 
 func (o *BuildOptions) AddFlags(cmd *cobra.Command, imageBuilderRepo string) {
 	// Build flags
-	BoolVarWithViper(cmd, &o.Verbose, viperBuildPrefix, "verbose", false, "Enable verbose output to see the information from packer. Not turning this on will mean the process appears to hang while the image build happens")
+	BoolVarWithViper(cmd, &o.Verbose, viperBuildPrefix, "verbose", false, "--DEPRECATED-- Enable verbose output to see the information from packer. Not turning this on will mean the process appears to hang while the image build happens")
 	StringVarWithViper(cmd, &o.BuildOS, viperBuildPrefix, "build-os", "ubuntu-2204", "--DEPRECATED-- USE THE CONFIG FILE. This is the target os to build. Valid values are currently: ubuntu-2004 and ubuntu-2204")
 	StringVarWithViper(cmd, &o.ImagePrefix, viperBuildPrefix, "image-prefix", "kube", "--DEPRECATED-- USE THE CONFIG FILE. This will prefix the image with the value provided. Defaults to 'kube' producing an image name of kube-yymmdd-xxxxxxxx")
 	StringVarWithViper(cmd, &o.ImageRepo, viperBuildPrefix, "image-repo", strings.Join([]string{imageBuilderRepo, "git"}, "."), "--DEPRECATED-- USE THE CONFIG FILE. The imageRepo from which the image builder should be deployed")
