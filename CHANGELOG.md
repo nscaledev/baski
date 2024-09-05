@@ -1,9 +1,10 @@
 # Changelog
 
-## [ 2024/xx/xx - v1.2.x]
+## [ 2024/09/05 - v1.2.2]
 
 ### Add/Updated
 * Updated go modules
+* new metadata prefix
 
 ### Deprecated
 * All flags have been deprecated except a select few. The config file should be used from now on.
