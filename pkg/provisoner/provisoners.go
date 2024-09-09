@@ -87,18 +87,18 @@ func generateBuilderMetadata(o *flags.BuildOptions) map[string]string {
 		gpuVersion = fmt.Sprintf("v%s", o.AMDVersion)
 	}
 
+	metaPrefix := o.OpenStackCoreFlags.MetadataPrefix
 	meta := map[string]string{
 		"date": time.Now().Format(time.RFC3339),
 		"os":   o.BuildOS,
+		fmt.Sprintf("%s:kubernetes_version", metaPrefix): fmt.Sprintf("v%s", o.KubeVersion),
 	}
 
-	metaPrefix := o.OpenStackCoreFlags.MetadataPrefix
 	if o.AddGpuSupport {
 		gpuMeta := map[string]string{
 			fmt.Sprintf("%s:gpu_vendor", metaPrefix):         gpuVendor,
 			fmt.Sprintf("%s:gpu_models", metaPrefix):         strings.ToUpper(o.GpuModelSupport),
 			fmt.Sprintf("%s:gpu_driver_version", metaPrefix): gpuVersion,
-			fmt.Sprintf("%s:kubernetes_version", metaPrefix): fmt.Sprintf("v%s", o.KubeVersion),
 			fmt.Sprintf("%s:virtualization", metaPrefix):     o.GpuInstanceSupport,
 		}
 		for k, v := range gpuMeta {
