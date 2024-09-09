@@ -1,5 +1,11 @@
 # Changelog
 
+## [ 2024/09/10 - v1.2.3]
+
+### Add/Updated
+* Updated go modules
+* fixed bug where k8s version wasn't being tagged onto metadata for openstack
+
 ## [ 2024/09/05 - v1.2.2]
 
 ### Add/Updated
