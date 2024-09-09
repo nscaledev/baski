@@ -18,12 +18,13 @@ package build
 
 import (
 	"fmt"
+	"path/filepath"
+
 	"github.com/drewbernetes/baski/pkg/constants"
 	"github.com/drewbernetes/baski/pkg/providers/packer"
 	"github.com/drewbernetes/baski/pkg/provisoner"
 	"github.com/drewbernetes/baski/pkg/util/flags"
 	"github.com/spf13/cobra"
-	"path/filepath"
 )
 
 var (
@@ -57,11 +58,13 @@ By using this, the time is reduced and automation can be enabled.`,
 				return err
 			}
 
-			// Fetch image-builder from git repo
-			buildGitDir := createRepoDirectory()
-			err = fetchBuildRepo(buildGitDir, o)
-			if err != nil {
-				return err
+			// Either use a local dir or fetch image-builder from a git repo
+			buildGitDir := o.ImageRepoDir
+			if buildGitDir == "" {
+				buildGitDir = createRepoDirectory()
+				if err := fetchBuildRepo(buildGitDir, o); err != nil {
+					return err
+				}
 			}
 
 			// Generate a packer config

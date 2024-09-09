@@ -84,6 +84,8 @@ build:
   image-repo: "https://github.com/kubernetes-sigs/image-builder.git"
   # The branch to use in the image repo.
   image-repo-branch: "main"
+  # The path to an existing checkout of image-builder
+  image-repo-dir: ""
   # The crictl version.
   crictl-version: "1.26.0"
   # The CNI version.

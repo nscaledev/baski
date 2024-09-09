@@ -18,9 +18,10 @@ package flags
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"strings"
 )
 
 type BuildOptions struct {
@@ -35,6 +36,7 @@ type BuildOptions struct {
 	ImagePrefix             string
 	ImageRepo               string
 	ImageRepoBranch         string
+	ImageRepoDir            string
 	ContainerdSHA256        string
 	ContainerdVersion       string
 	CrictlVersion           string
@@ -69,6 +71,7 @@ func (o *BuildOptions) SetOptionsFromViper() {
 	o.ImagePrefix = viper.GetString(fmt.Sprintf("%s.image-prefix", viperBuildPrefix))
 	o.ImageRepo = viper.GetString(fmt.Sprintf("%s.image-repo", viperBuildPrefix))
 	o.ImageRepoBranch = viper.GetString(fmt.Sprintf("%s.image-repo-branch", viperBuildPrefix))
+	o.ImageRepoDir = viper.GetString(fmt.Sprintf("%s.image-repo-dir", viperBuildPrefix))
 	o.ContainerdSHA256 = viper.GetString(fmt.Sprintf("%s.containerd-sha256", viperBuildPrefix))
 	o.ContainerdVersion = viper.GetString(fmt.Sprintf("%s.containerd-version", viperBuildPrefix))
 	o.CrictlVersion = viper.GetString(fmt.Sprintf("%s.crictl-version", viperBuildPrefix))
@@ -113,6 +116,7 @@ func (o *BuildOptions) AddFlags(cmd *cobra.Command, imageBuilderRepo string) {
 	StringVarWithViper(cmd, &o.ImagePrefix, viperBuildPrefix, "image-prefix", "kube", "--DEPRECATED-- USE THE CONFIG FILE. This will prefix the image with the value provided. Defaults to 'kube' producing an image name of kube-yymmdd-xxxxxxxx")
 	StringVarWithViper(cmd, &o.ImageRepo, viperBuildPrefix, "image-repo", strings.Join([]string{imageBuilderRepo, "git"}, "."), "--DEPRECATED-- USE THE CONFIG FILE. The imageRepo from which the image builder should be deployed")
 	StringVarWithViper(cmd, &o.ImageRepoBranch, viperBuildPrefix, "image-repo-branch", "main", "--DEPRECATED-- USE THE CONFIG FILE. The branch to checkout from the cloned imageRepo")
+	StringVarWithViper(cmd, &o.ImageRepoDir, viperBuildPrefix, "image-repo-dir", "", "An pre-existing directory for image-builder to use, i.e do not clone")
 	StringVarWithViper(cmd, &o.ContainerdSHA256, viperBuildPrefix, "containerd-sha256", "9be621c0206b5c20a1dea05fae12fc698e5083cc81f65c9d918c644090696d19", "--DEPRECATED-- USE THE CONFIG FILE. The sha256 of containerd - required when setting contained")
 	StringVarWithViper(cmd, &o.ContainerdVersion, viperBuildPrefix, "containerd-version", "1.7.13", "--DEPRECATED-- USE THE CONFIG FILE. The containerd version to include in the image")
 	StringVarWithViper(cmd, &o.CniVersion, viperBuildPrefix, "cni-version", "1.2.0", "--DEPRECATED-- USE THE CONFIG FILE. The CNI plugins version to include to the built image")
