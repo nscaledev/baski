@@ -61,6 +61,8 @@ docker run --name baski -it --rm --env OS_CLOUD=some-cloud -v /path/to/openstack
 #Then from in here
 baski build / scan / sign
 ```
+**The prebuilt images are stored in Dockerhub at drewviles/baski**
+
 # TODO
 
 * Automatically clear up resources when ctrl-c is pressed.
