@@ -171,7 +171,9 @@ func (s *OpenStackScanProvisioner) Prepare() error {
 	var err error
 	o := s.Opts
 
-	o.OpenStackFlags.FlavorName = o.FlavorName
+	if o.ScanFlavorName != "" {
+		o.OpenStackFlags.FlavorName = o.ScanFlavorName
+	}
 
 	cloudProvider := ostack.NewCloudsProvider(o.OpenStackFlags.CloudName)
 
@@ -302,7 +304,7 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 
 	// If the image is not set to auto delete, tag the image with the check result.
 	if !o.AutoDeleteImage {
-		err = sc.TagImage()
+		err = sc.TagImage(s.Opts.OpenStackCoreFlags.MetadataPrefix)
 		if err != nil {
 			return err
 		}
