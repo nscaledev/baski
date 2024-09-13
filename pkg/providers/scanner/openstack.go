@@ -15,6 +15,7 @@ import (
 	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/layer3/floatingips"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -131,8 +132,12 @@ func (s *OpenStackScannerClient) CheckResults() error {
 }
 
 // TagImage Tags the image with the passed or failed property.
-func (s *OpenStackScannerClient) TagImage() error {
-	err := s.imageClient.TagImage(s.Img.Properties, s.Img.ID, s.MetaTag, "security_scan")
+func (s *OpenStackScannerClient) TagImage(metadataPrefix string) error {
+	tag := "security_scan"
+	if metadataPrefix != "" {
+		tag = strings.Join([]string{metadataPrefix, tag}, ":")
+	}
+	err := s.imageClient.TagImage(s.Img.Properties, s.Img.ID, s.MetaTag, tag)
 	if err != nil {
 		return err
 	}
