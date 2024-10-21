@@ -249,6 +249,7 @@ func (s *OpenStackScanProvisioner) ScanImages() error {
 
 			sc := scanner.NewOpenStackScanner(s.computeClient, s.imageClient, s.networkClient, s3Conn, severity, &image)
 			err = s.scanServer(sc, &wg)
+			// TODO: This needs to generate an error where possible as any pipelines should register a failure, not a successful completion.
 			if err != nil {
 				log.Println(err)
 			}
