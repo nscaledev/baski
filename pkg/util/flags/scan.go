@@ -30,6 +30,7 @@ type ScanOptions struct {
 	ScanSingleOptions
 	ScanMultipleOptions
 
+	ScanFlavorName      string
 	AutoDeleteImage     bool
 	SkipCVECheck        bool
 	MaxSeverityScore    float64
@@ -66,6 +67,7 @@ func (o *ScanOptions) SetOptionsFromViper() {
 }
 
 func (o *ScanOptions) AddFlags(cmd *cobra.Command) {
+	StringVarWithViper(cmd, &o.ScanFlavorName, viperScanPrefix, "flavor-name", "", "--DEPRECATED-- USE THE CONFIG FILE. The flavor to use for the scan. This overrides the one supplied by the openstack config.")
 	BoolVarWithViper(cmd, &o.AutoDeleteImage, viperScanPrefix, "auto-delete-image", false, "--DEPRECATED-- USE THE CONFIG FILE. If true, the image will be deleted if a vulnerability check does not succeed - recommended when building new images.")
 	BoolVarWithViper(cmd, &o.SkipCVECheck, viperScanPrefix, "skip-cve-check", false, "--DEPRECATED-- USE THE CONFIG FILE. If true, the image will be allowed even if a vulnerability is detected.")
 	Float64VarWithViper(cmd, &o.MaxSeverityScore, viperScanPrefix, "max-severity-score", 7.0, "--DEPRECATED-- USE THE CONFIG FILE. Can be anything from 0.1 to 10.0. Anything equal to or above this value will cause a failure. (Unless skip-cve-check is supplied)")

@@ -58,7 +58,11 @@ func TestCheckResults(t *testing.T) {
 }
 
 func TestTagImage(t *testing.T) {
-
+	//c := mock.MockOpenStackComputeClient{}
+	//i := mock.MockOpenStackImageClient{}
+	//n := mock.MockOpenStackNetworkClient{}
+	//ss3 := mock.MockS3Interface{}
+	//s := NewOpenStackScanner(&c, &i, &n, ss3, trivy.HIGH, &images.Image{})
 }
 
 func TestUploadResultsToS3(t *testing.T) {
