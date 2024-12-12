@@ -1,59 +1,128 @@
 # Changelog
 
-## [ 2024/09/10 - v1.2.3]
+All notable changes to this project will be documented in this file.
 
-### Add/Updated
-* Updated go modules
-* fixed bug where k8s version wasn't being tagged onto metadata for openstack
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [unreleased]
 
-## [ 2024/09/05 - v1.2.2]
+### Changed
 
-### Add/Updated
-* Updated go modules
-* new metadata prefix
 
-### Deprecated
-* All flags have been deprecated except a select few. The config file should be used from now on.
+- Updating go modules
+- CHANGELOG updated using git cliff
 
-## [ 2024/04/26 - v1.2.1 ]
 
-### Add/Updated
-* Added ability to override default contained version
-* Updated go modules
+## [1.2.3] - 2024-10-21
 
-## [ 2024/03/15 - v1.2.0 ]
+### Changed
 
-### BREAKING CHANGES
 
-### Remove
-* Baski server has been removed - it was extra work that was sporadically used. It's up to the user to provide a way to
-  interact with the results. If you wish to keep server, then look at a previous release and fork that code by all means.
+- Module and golang update
 
-## [ 2024/03/11 - v1.1.1 ]
+* adding a comment around how baski fails as a todo
+* updated go modules and version
 
-### Changed/Added
 
-* Setting images to private by default and will only set to public once a scan has passed successfully - this can still
-  be overridden at the config level.
-  
-## [ 2024/02/29 - v1.1.0 ]
+### Fixed
 
-### BREAKING CHANGES
 
-* changed `cloud` prefix to `infra` in flags and config.
-* changed `build.nvidia` prefix to `build.gpu` in flags and config.
-* changed `build.nvidia.enable-nvidia-support` prefix to `build.gpu.enable-gpu-support` in flags and config.
+- Adding metadata prefix option to signing
 
-### Changed/Added
 
-* Added KubeVirt as a build option.
-* Supports AMD GPUs
+## [1.2.2] - 2024-09-09
 
-## [ 2024/02/15 - v1.0.0 ]
+### Changed
 
-### Changed/Added
 
-First release with:
+- Bump github.com/hashicorp/go-retryablehttp from 0.7.5 to 0.7.7 in the go_modules group across 1 directory (#9)
+- Module updates
 
-* Functioning support for OpenStack build, scan and signing.
-* Baski Server 
+* security updates for modules
+- Updating OS and trivy support
+- Updated pipeline and switched to storing images in DockerHub
+
+* updated pipeline and switched to storing images in DockerHub
+* adding a CODEOWNERS
+- Add option to use existing local checkout of image-builder
+
+Handy when you're building locally and don't want Baski fetching a copy
+of the image-builder repo each and every time.
+
+Co-authored-by: Drew Hudson-Viles <drew@hudson-viles.uk>
+
+
+### Fixed
+
+
+- Metadata prefix + deprecations
+
+* deprecated almost all of the flags in favor of the config file
+* optional metadata prefix for images
+* updated modules
+* cleanup of error printing in tests
+* updating go in the pipeline
+- Correcting when the k8s metadata should be applied
+
+
+## [1.2.1] - 2024-04-26
+
+### Changed
+
+
+- Go module updates and added contained version override support
+
+
+## [1.2.0] - 2024-03-20
+
+### Changed
+
+
+- Added more linting and testing - updated helm charts push endpoint
+
+* added more linting and testing - updated helm charts push endpoint
+- Removed baski server
+
+* Removed baski server
+* Update golang version in pipeline
+* Added a default toe the flag for scan-bucket
+- Updated CHANGELOG
+
+
+### Fixed
+
+
+- Build section of tag pipeline still referenced old path to main.go
+
+
+## [1.1.1] - 2024-03-11
+
+### Added
+
+
+- Image-visibility changes on a scan pass or fail.
+
+
+### Changed
+
+
+- Updated go modules & readme
+- Added information on Image Visibility to the OpenStack docs
+
+
+## [1.1.0] - 2024-02-29
+
+### Added
+
+
+- Major overhaul to enable multiple builders to be supported in the all phases
+
+
+## [1.0.0] - 2024-02-15
+
+### Added
+
+
+- Initial Commit and Release
+
+

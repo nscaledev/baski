@@ -4,6 +4,14 @@ on:
   workflow_dispatch:
   pull_request:
     types: [ opened, reopened, synchronize ]
+    paths:
+      - "cmd/**"
+      - "pkg/**"
+      - "hack/**"
+      - "docker/**"
+      - "testhelpers/**"
+      - "go.mod"
+      - "go.sum"
 
 jobs:
   lint:
@@ -23,7 +31,7 @@ jobs:
 
   test:
     name: Run tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: lint
     steps:
       - uses: actions/checkout@v4
