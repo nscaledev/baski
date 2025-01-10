@@ -5,10 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.7] - 2025-01-10
+
+### Fixed
+- Fixing trivy panics when ignoreList is len 0
+
 ## [1.2.6] - 2025-01-10
 
 ### Removed
-- Removed flags - flags are still coded in for now but they are no longer added to the commands themselves so can no longer be used - flag code to be removed in next release
+- Removed flags - flags are still coded in for now but they are no longer added to the commands themselves so can no longer be used - flag code to be removed in next release by @drew-viles in [#25](https://github.com/drewbernetes/baski/pull/25)
 
 ## [1.2.5] - 2025-01-10
 
@@ -87,6 +92,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @drew-viles made their first contribution
+[1.2.7]: https://github.com/drewbernetes/baski/compare/v1.2.6..v1.2.7
 [1.2.6]: https://github.com/drewbernetes/baski/compare/v1.2.5..v1.2.6
 [1.2.5]: https://github.com/drewbernetes/baski/compare/v1.2.4..v1.2.5
 [1.2.4]: https://github.com/drewbernetes/baski/compare/v1.2.3..v1.2.4
