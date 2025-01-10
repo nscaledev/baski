@@ -236,29 +236,48 @@ func (s *OpenStackScanProvisioner) ScanImages() error {
 	}
 
 	// Let's scan a bunch of images based on the concurrency
-	semaphore := make(chan struct{}, o.Concurrency)
+
+	// Error collection channel
+	errChan := make(chan error, len(imgs))
+	imageChan := make(chan images.Image)
+
+	// Worker Pool
 	var wg sync.WaitGroup
+	wg.Add(o.Concurrency)
 
-	for _, img := range imgs {
-		wg.Add(1)
-		semaphore <- struct{}{}
-		go func(image images.Image) {
-			defer func() {
-				<-semaphore // Release the slot in the semaphore
-			}()
+	for i := 0; i < o.Concurrency; i++ {
+		go func() {
+			defer wg.Done()
 
-			sc := scanner.NewOpenStackScanner(s.computeClient, s.imageClient, s.networkClient, s3Conn, severity, &image)
-			err = s.scanServer(sc, &wg)
-			// TODO: This needs to generate an error where possible as any pipelines should register a failure, not a successful completion.
-			if err != nil {
-				log.Println(err)
+			for img := range imageChan {
+				sc := scanner.NewOpenStackScanner(s.computeClient, s.imageClient, s.networkClient, s3Conn, severity, &img)
+				err = s.scanServer(sc, &wg)
+
+				if err != nil {
+					errChan <- fmt.Errorf("failed to scan image %v: %w", img, err)
+				}
 			}
-
-		}(img)
+		}()
 	}
-	wg.Wait()
 
-	close(semaphore)
+	go func() {
+		for _, img := range imgs {
+			wg.Add(1)
+			imageChan <- img
+		}
+		close(imageChan)
+	}()
+	wg.Wait()
+	close(errChan)
+
+	//Collect Errors
+	var errs []error
+	for err := range errChan {
+		errs = append(errs, err)
+	}
+	if len(errs) > 0 {
+		return fmt.Errorf("encounted errors during image scanning: %v", errs)
+	}
 
 	return nil
 }
