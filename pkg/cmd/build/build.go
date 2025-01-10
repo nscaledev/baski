@@ -27,10 +27,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	imageBuilderRepo = "https://github.com/kubernetes-sigs/image-builder"
-)
-
 // NewBuildCommand creates a command that allows the building of an image.
 func NewBuildCommand() *cobra.Command {
 	o := &flags.BuildOptions{}
