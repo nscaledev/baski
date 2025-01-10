@@ -254,7 +254,7 @@ func (s *OpenStackScanProvisioner) ScanImages() error {
 				err = s.scanServer(sc, &wg)
 
 				if err != nil {
-					errChan <- fmt.Errorf("failed to scan image %s: %w", img, err)
+					errChan <- fmt.Errorf("failed to scan image %v: %w", img, err)
 				}
 			}
 		}()
