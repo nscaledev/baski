@@ -6,7 +6,6 @@ import (
 	"fmt"
 	sshconnect "github.com/drewbernetes/baski/pkg/remote"
 	"github.com/drewbernetes/baski/pkg/trivy"
-	"github.com/drewbernetes/baski/pkg/util/flags"
 	"github.com/drewbernetes/baski/pkg/util/interfaces"
 	simple_s3 "github.com/drewbernetes/simple-s3"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/keypairs"
@@ -23,46 +22,46 @@ type OpenStackScannerClient struct {
 	BaseScanner
 	Img *images.Image
 
-	computeClient interfaces.OpenStackComputeClient
-	imageClient   interfaces.OpenStackImageClient
-	networkClient interfaces.OpenStackNetworkClient
-	keyPair       *keypairs.KeyPair
-	fip           *floatingips.FloatingIP
-	s3Credentials *simple_s3.S3
-	server        *servers.Server
-	severity      trivy.Severity
+	computeClient     interfaces.OpenStackComputeClient
+	imageClient       interfaces.OpenStackImageClient
+	networkClient     interfaces.OpenStackNetworkClient
+	keyPair           *keypairs.KeyPair
+	fip               *floatingips.FloatingIP
+	s3ClientInterface *simple_s3.S3
+	server            *servers.Server
+	severity          trivy.Severity
 }
 
 // NewOpenStackScanner returns new scanner client.
 func NewOpenStackScanner(c interfaces.OpenStackComputeClient, i interfaces.OpenStackImageClient, n interfaces.OpenStackNetworkClient, s3Conn *simple_s3.S3, severity trivy.Severity, img *images.Image) *OpenStackScannerClient {
 	return &OpenStackScannerClient{
-		computeClient: c,
-		imageClient:   i,
-		networkClient: n,
-		s3Credentials: s3Conn,
-		severity:      severity,
-		Img:           img,
+		computeClient:     c,
+		imageClient:       i,
+		networkClient:     n,
+		s3ClientInterface: s3Conn,
+		severity:          severity,
+		Img:               img,
 	}
 }
 
 // RunScan builds the server for scanning and starts the scan
-func (s *OpenStackScannerClient) RunScan(o *flags.ScanOptions) error {
-	trivyOptions := trivy.New(o.TrivyignorePath, o.TrivyignoreFilename, o.TrivyignoreList, s.severity)
+func (s *OpenStackScannerClient) RunScan(trivyignorePath, trivyignoreFilename string, trivyignoreList []string, fip, flavor, netID, securityGroup string, attachConfigDrive bool) error {
+	trivyOptions := trivy.New(trivyignorePath, trivyignoreFilename, trivyignoreList, s.severity)
 	err := s.getKeypair(s.Img.ID)
 	if err != nil {
 		return err
 	}
-	err = s.getFip(o.OpenStackFlags.FloatingIPNetworkName)
+	err = s.getFip(fip)
 	if err != nil {
 		return err
 	}
 
-	userData, err := trivyOptions.GenerateTrivyCommand(s.s3Credentials)
+	userData, err := trivyOptions.GenerateTrivyCommand(s.s3ClientInterface)
 	if err != nil {
 		return err
 	}
 
-	err = s.buildServer(o.OpenStackInstanceFlags.FlavorName, o.OpenStackInstanceFlags.NetworkID, s.Img.ID, o.OpenStackInstanceFlags.AttachConfigDrive, userData, []string{o.OpenStackFlags.SecurityGroup})
+	err = s.buildServer(flavor, netID, s.Img.ID, attachConfigDrive, userData, []string{securityGroup})
 	if err != nil {
 		return err
 	}
@@ -154,7 +153,7 @@ func (s *OpenStackScannerClient) UploadResultsToS3() error {
 	}
 	defer f.Close()
 
-	err = s.s3Credentials.Put(fmt.Sprintf("scans/%s/%s", s.Img.ID, "results.json"), f)
+	err = s.s3ClientInterface.Put(fmt.Sprintf("scans/%s/%s", s.Img.ID, "results.json"), f)
 	if err != nil {
 		return err
 	}

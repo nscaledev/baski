@@ -149,18 +149,75 @@ func retrieveNewOpenStackImageID() (string, error) {
 
 // OpenStackScanProvisioner contains the parameters required for scanning images.
 type OpenStackScanProvisioner struct {
-	Opts          *flags.ScanOptions
-	imageClient   interfaces.OpenStackImageClient
-	computeClient interfaces.OpenStackComputeClient
-	networkClient interfaces.OpenStackNetworkClient
-	imageWildCard string
-	imageID       string
+	imageClient           interfaces.OpenStackImageClient
+	computeClient         interfaces.OpenStackComputeClient
+	networkClient         interfaces.OpenStackNetworkClient
+	cloudName             string
+	flavorName            string
+	floatingIPNetworkName string
+	metadataPrefix        string
+	networkID             string
+	attachConfigDrive     bool
+	autoDeleteImage       bool
+	skipCVECheck          bool
+	maxSeverity           string
+	imageVisibility       string
+	securityGroup         string
+	imageID               string
+	imageWildCard         string
+	scanConcurrency       int
+	trivyignorePath       string
+	trivyignoreFilename   string
+	trivyignoreList       []string
+	s3Endpoint            string
+	s3AccessKey           string
+	s3SecretKey           string
+	s3Region              string
+	s3Bucket              string
 }
 
 // newOpenStackScanner returns a new instance of OpenStackScanProvisioner
 func newOpenStackScanner(o *flags.ScanOptions) *OpenStackScanProvisioner {
+	var flavorName string
+	if o.ScanFlavorName != "" {
+		flavorName = o.ScanFlavorName
+	} else {
+		flavorName = o.OpenStackFlags.OpenStackInstanceFlags.FlavorName
+	}
+
+	concurrency := 1
+	if o.Concurrency != 0 {
+		concurrency = o.Concurrency
+	}
+
 	p := &OpenStackScanProvisioner{
-		Opts: o,
+		cloudName:             o.OpenStackFlags.OpenStackCoreFlags.CloudName,
+		flavorName:            flavorName,
+		floatingIPNetworkName: o.OpenStackFlags.FloatingIPNetworkName,
+		networkID:             o.OpenStackInstanceFlags.NetworkID,
+		attachConfigDrive:     o.OpenStackInstanceFlags.AttachConfigDrive,
+		metadataPrefix:        o.OpenStackCoreFlags.MetadataPrefix,
+		autoDeleteImage:       o.AutoDeleteImage,
+		skipCVECheck:          o.SkipCVECheck,
+		maxSeverity:           o.MaxSeverityType,
+		imageVisibility:       o.OpenStackFlags.ImageVisibility,
+		securityGroup:         o.OpenStackFlags.SecurityGroup,
+		scanConcurrency:       concurrency,
+		s3Endpoint:            o.S3Flags.Endpoint,
+		s3AccessKey:           o.S3Flags.AccessKey,
+		s3SecretKey:           o.S3Flags.SecretKey,
+		s3Region:              o.S3Flags.Region,
+		s3Bucket:              o.ScanBucket,
+		trivyignorePath:       o.TrivyignorePath,
+		trivyignoreFilename:   o.TrivyignoreFilename,
+		trivyignoreList:       o.TrivyignoreList,
+	}
+
+	if o.ScanSingleOptions.ImageID != "" {
+		p.imageID = o.ScanSingleOptions.ImageID
+	}
+	if o.ScanMultipleOptions.ImageSearch != "" {
+		p.imageWildCard = o.ScanMultipleOptions.ImageSearch
 	}
 
 	return p
@@ -169,13 +226,8 @@ func newOpenStackScanner(o *flags.ScanOptions) *OpenStackScanProvisioner {
 // Prepare the requirements for scanning images. this includes setting up the OpenStack clients so that communication with OpenStack is successful.
 func (s *OpenStackScanProvisioner) Prepare() error {
 	var err error
-	o := s.Opts
 
-	if o.ScanFlavorName != "" {
-		o.OpenStackFlags.FlavorName = o.ScanFlavorName
-	}
-
-	cloudProvider := ostack.NewCloudsProvider(o.OpenStackFlags.CloudName)
+	cloudProvider := ostack.NewCloudsProvider(s.cloudName)
 
 	s.imageClient, err = ostack.NewImageClient(cloudProvider)
 	if err != nil {
@@ -192,9 +244,6 @@ func (s *OpenStackScanProvisioner) Prepare() error {
 		return err
 	}
 
-	s.imageID = o.ScanSingleOptions.ImageID
-	s.imageWildCard = o.ScanMultipleOptions.ImageSearch
-
 	return nil
 }
 
@@ -202,7 +251,6 @@ func (s *OpenStackScanProvisioner) Prepare() error {
 // The image is then scanned and the results uploaded to S3.
 func (s *OpenStackScanProvisioner) ScanImages() error {
 	var err error
-	o := s.Opts
 
 	imgs := []images.Image{}
 
@@ -210,26 +258,26 @@ func (s *OpenStackScanProvisioner) ScanImages() error {
 	if s.imageID != "" {
 		var img *images.Image
 
-		img, err = s.imageClient.FetchImage(o.ScanSingleOptions.ImageID)
+		img, err = s.imageClient.FetchImage(s.imageID)
 		if err != nil {
 			return err
 		}
 
 		imgs = append(imgs, *img)
 	} else if s.imageWildCard != "" {
-		imgs, err = s.imageClient.FetchAllImages(o.ImageSearch)
+		imgs, err = s.imageClient.FetchAllImages(s.imageWildCard)
 		if err != nil {
 			return err
 		}
 	} else {
-		return fmt.Errorf("no image(s) provided")
+		return fmt.Errorf("no scan image ID or WILDCARD specified")
 	}
 
-	severity := trivy.Severity(strings.ToUpper(o.MaxSeverityType))
+	severity := trivy.Severity(strings.ToUpper(s.maxSeverity))
 
 	var s3Conn *simple_s3.S3
 
-	s3Conn, err = simple_s3.New(o.S3Flags.Endpoint, o.S3Flags.AccessKey, o.S3Flags.SecretKey, o.ScanBucket, o.S3Flags.Region)
+	s3Conn, err = simple_s3.New(s.s3Endpoint, s.s3AccessKey, s.s3SecretKey, s.s3Bucket, s.s3Region)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -243,9 +291,9 @@ func (s *OpenStackScanProvisioner) ScanImages() error {
 
 	// Worker Pool
 	var wg sync.WaitGroup
-	wg.Add(o.Concurrency)
+	wg.Add(s.scanConcurrency)
 
-	for i := 0; i < o.Concurrency; i++ {
+	for i := 0; i < s.scanConcurrency; i++ {
 		go func() {
 			defer wg.Done()
 
@@ -254,7 +302,7 @@ func (s *OpenStackScanProvisioner) ScanImages() error {
 				err = s.scanServer(sc, &wg)
 
 				if err != nil {
-					errChan <- fmt.Errorf("failed to scan image %v: %w", img, err)
+					errChan <- fmt.Errorf("failed to scan image %s with ID %s. error: %s", img.Name, img.ID, err.Error())
 				}
 			}
 		}()
@@ -285,12 +333,11 @@ func (s *OpenStackScanProvisioner) ScanImages() error {
 // scanServer will scan, parse the results and upload them to S3. It's in its own function for the purpose of threading.
 func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient, wg *sync.WaitGroup) error {
 	defer wg.Done()
-	o := s.Opts
 
 	log.Printf("Processing Image with ID: %s\n", sc.Img.ID)
 
 	// Run the scan.
-	err := sc.RunScan(o)
+	err := sc.RunScan(s.trivyignorePath, s.trivyignoreFilename, s.trivyignoreList, s.floatingIPNetworkName, s.flavorName, s.networkID, s.securityGroup, s.attachConfigDrive)
 	if err != nil {
 		return err
 	}
@@ -309,7 +356,7 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 
 	// Check if a visibility option has been supplied.
 	// If so, we'll leave things as they are otherwise we'll control it.
-	if s.Opts.OpenStackFlags.ImageVisibility == "" {
+	if s.imageVisibility == "" {
 		// If the image has no vulnerabilities, we can set the image to public otherwise default to private.
 		visibility := images.ImageVisibilityPrivate
 		if len(sc.Vulns) == 0 {
@@ -323,8 +370,8 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 	}
 
 	// If the image is not set to auto delete, tag the image with the check result.
-	if !o.AutoDeleteImage {
-		err = sc.TagImage(s.Opts.OpenStackCoreFlags.MetadataPrefix)
+	if !s.autoDeleteImage {
+		err = sc.TagImage(s.metadataPrefix)
 		if err != nil {
 			return err
 		}
@@ -347,9 +394,9 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 	log.Printf("Finished processing Image ID: %s\n", sc.Img.ID)
 
 	// Check if the CVE checking is being skipped, if not then bail out here.
-	if !o.SkipCVECheck {
+	if !s.skipCVECheck {
 		errMsg := "vulnerabilities detected above threshold. Please see the possible fixes located at '/tmp/results.json' for further information on this"
-		if o.AutoDeleteImage {
+		if s.autoDeleteImage {
 			errMsg = fmt.Sprintf("%s - %s", errMsg, ". The image has been removed from the infra.")
 		}
 		return fmt.Errorf("%s", errMsg)
@@ -359,13 +406,17 @@ func (s *OpenStackScanProvisioner) scanServer(sc *scanner.OpenStackScannerClient
 
 // OpenStackSignProvisioner contains the parameters required for signing images.
 type OpenStackSignProvisioner struct {
-	Opts *flags.SignOptions
+	cloudName      string
+	imageID        string
+	metadataPrefix string
 }
 
 // newOpenStackSigner returns a new instance of OpenStackSignProvisioner.
 func newOpenStackSigner(o *flags.SignOptions) *OpenStackSignProvisioner {
 	p := &OpenStackSignProvisioner{
-		Opts: o,
+		cloudName:      o.OpenStackCoreFlags.CloudName,
+		imageID:        o.ImageID,
+		metadataPrefix: o.OpenStackCoreFlags.MetadataPrefix,
 	}
 
 	return p
@@ -373,24 +424,23 @@ func newOpenStackSigner(o *flags.SignOptions) *OpenStackSignProvisioner {
 
 // SignImage will take the digest of the signing process and tag the image with the appropriate metadata field.
 func (s *OpenStackSignProvisioner) SignImage(digest string) error {
-	o := s.Opts
-	cloudProvider := ostack.NewCloudsProvider(o.OpenStackCoreFlags.CloudName)
+	cloudProvider := ostack.NewCloudsProvider(s.cloudName)
 
 	i, err := ostack.NewImageClient(cloudProvider)
 	if err != nil {
 		return err
 	}
 
-	img, err := i.FetchImage(o.ImageID)
+	img, err := i.FetchImage(s.imageID)
 	if err != nil {
 		return err
 	}
 
 	digestPropertyName := "digest"
-	if s.Opts.OpenStackCoreFlags.MetadataPrefix != "" {
-		digestPropertyName = strings.Join([]string{s.Opts.OpenStackCoreFlags.MetadataPrefix, digestPropertyName}, ":")
+	if s.metadataPrefix != "" {
+		digestPropertyName = strings.Join([]string{s.metadataPrefix, digestPropertyName}, ":")
 	}
-	err = i.TagImage(img.Properties, o.ImageID, digest, digestPropertyName)
+	err = i.TagImage(img.Properties, s.imageID, digest, digestPropertyName)
 	if err != nil {
 		return err
 	}
@@ -401,15 +451,14 @@ func (s *OpenStackSignProvisioner) SignImage(digest string) error {
 // ValidateImage can validate the signing of an image using the supplied key.
 // It will search for the digest metadata/property on the image and attempt to validate it.
 func (s *OpenStackSignProvisioner) ValidateImage(key []byte) error {
-	o := s.Opts
-	cloudProvider := ostack.NewCloudsProvider(o.OpenStackCoreFlags.CloudName)
+	cloudProvider := ostack.NewCloudsProvider(s.cloudName)
 
 	i, err := ostack.NewImageClient(cloudProvider)
 	if err != nil {
 		return err
 	}
 
-	img, err := i.FetchImage(o.ImageID)
+	img, err := i.FetchImage(s.imageID)
 	if err != nil {
 		return err
 	}
@@ -424,7 +473,7 @@ func (s *OpenStackSignProvisioner) ValidateImage(key []byte) error {
 
 	digest := field.(string)
 
-	valid, err := sign.Validate(o.ImageID, key, digest)
+	valid, err := sign.Validate(s.imageID, key, digest)
 	if err != nil {
 		return err
 	}
