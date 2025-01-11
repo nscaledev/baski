@@ -5,10 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.9] - 2025-01-11
+
+### Changed
+- Removing flags and refactored some code by @drew-viles in [#28](https://github.com/drewbernetes/baski/pull/28)
+
 ## [1.2.8] - 2025-01-10
 
 ### Changed
-- Changing how concurrent image scanning works to imrpove error checking
+- Changing how concurrent image scanning works to improve error checking by @drew-viles in [#27](https://github.com/drewbernetes/baski/pull/27)
 
 ## [1.2.7] - 2025-01-10
 
@@ -100,6 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## New Contributors
 * @drew-viles made their first contribution
+[1.2.9]: https://github.com/drewbernetes/baski/compare/v1.2.8..v1.2.9
 [1.2.8]: https://github.com/drewbernetes/baski/compare/v1.2.7..v1.2.8
 [1.2.7]: https://github.com/drewbernetes/baski/compare/v1.2.6..v1.2.7
 [1.2.6]: https://github.com/drewbernetes/baski/compare/v1.2.5..v1.2.6
