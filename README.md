@@ -63,6 +63,34 @@ baski build / scan / sign
 ```
 **The prebuilt images are stored in Dockerhub at drewviles/baski**
 
+## Update the Changelog
+
+Get yourself a GitHub access token with permissions to read the repository, if you don't already have one.
+
+```shell
+gh auth login
+gh auth token
+```
+
+Run [git cliff](https://github.com/orhun/git-cliff/)
+
+```
+export GITHUB_TOKEN=<token> # You can also add this to your ~/.bashrc or ~/.zshrc etc
+git cliff -o
+```
+It's worth noting that `--bump` will update the changelog with what it thinks will be the next release. Make sure to check this and ensure your next tag matches this value.
+The rules are:
+* The default is `patch`. Generally speaking this would bea  `fix`, `docs`, `chore` etc. (see [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/))
+* If `feat:` exists in the commit, then a minor version increase will happen.
+* If `BREAKING CHANGE:` exists in the commit, then it will be a major version bump.
+* If `--bump` is not added, it will result in an `[unreleased]` changelog entry instead of a tagged one.
+
+Once tested and validated using your branch, get the next available tag by running the following command, and incrementing by one. e.g if this output `v0.1.31`, you should use v0.1.32.
+
+```shell
+git tag | sort -V | tail -n1
+```
+
 # TODO
 
 * Automatically clear up resources when ctrl-c is pressed.
