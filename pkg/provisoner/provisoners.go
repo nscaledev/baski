@@ -21,7 +21,6 @@ import (
 	"github.com/nscaledev/baski/pkg/providers/packer"
 	"github.com/nscaledev/baski/pkg/util/flags"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -94,33 +93,21 @@ func saveImageIDToFile(imgID string) error {
 
 // generateBuilderMetadata generates some glance metadata for the image.
 func generateBuilderMetadata(o *flags.BuildOptions) map[string]string {
-	var gpuVendor string
-	gpuVersion := "no_gpu"
-	gpuVendor = strings.ToUpper(o.GpuVendor)
-	if gpuVendor == "NVIDIA" {
-		gpuVersion = fmt.Sprintf("v%s", o.NvidiaVersion)
-	} else if gpuVendor == "AMD" {
-		gpuVersion = fmt.Sprintf("v%s", o.AMDVersion)
-	}
+	date := "date"
+	os := "os"
+	k8s := "kubernetes_version"
 
-	metaPrefix := o.OpenStackCoreFlags.MetadataPrefix
+	if o.OpenStackCoreFlags.MetadataPrefix != "" {
+		date = fmt.Sprintf("%s:%s", o.OpenStackCoreFlags.MetadataPrefix, date)
+		os = fmt.Sprintf("%s:%s", o.OpenStackCoreFlags.MetadataPrefix, os)
+		k8s = fmt.Sprintf("%s:%s", o.OpenStackCoreFlags.MetadataPrefix, k8s)
+	}
 	meta := map[string]string{
-		"date": time.Now().Format(time.RFC3339),
-		"os":   o.BuildOS,
-		fmt.Sprintf("%s:kubernetes_version", metaPrefix): fmt.Sprintf("v%s", o.KubeVersion),
+		date: time.Now().Format(time.RFC3339),
+		os:   o.BuildOS,
+		k8s:  fmt.Sprintf("v%s", o.KubeVersion),
 	}
 
-	if o.AddGpuSupport {
-		gpuMeta := map[string]string{
-			fmt.Sprintf("%s:gpu_vendor", metaPrefix):         gpuVendor,
-			fmt.Sprintf("%s:gpu_models", metaPrefix):         strings.ToUpper(o.GpuModelSupport),
-			fmt.Sprintf("%s:gpu_driver_version", metaPrefix): gpuVersion,
-			fmt.Sprintf("%s:virtualization", metaPrefix):     o.GpuInstanceSupport,
-		}
-		for k, v := range gpuMeta {
-			meta[k] = v
-		}
-	}
 	if len(o.AdditionalMetadata) > 0 {
 		for k, v := range o.AdditionalMetadata {
 			meta[k] = v

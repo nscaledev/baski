@@ -87,15 +87,19 @@ build:
   # The path to an existing checkout of image-builder
   image-repo-dir: ""
   # The crictl version.
-  crictl-version: "1.26.0"
+  crictl-version: "1.32.0"
   # The CNI version.
-  cni-version: "1.5.1"
+  cni-version: "1.6.0"
   # The specific version of the CNI Debian package ('kubernetes-cni') to install.
-  cni-deb-version: "1.5.1-1.1"
+  cni-deb-version: "1.6.0"
+  # The specific version of the CNI RHEL package ('kubernetes-cni') to install.
+  cni-rpm-version: "1.6.0"
   # The Kubernetes version.
-  kubernetes-version: "1.31.0"
+  kubernetes-version: "1.32.4"
   # The specific version of the Kubernetes Debian packages ('kubeadm', 'kubelet') to install.
-  kubernetes-deb-version: "1.31.0-1.1"
+  kubernetes-deb-version: "1.32.4-1.1"
+  # The specific version of the Kubernetes RHEL packages ('kubeadm', 'kubelet') to install.
+  kubernetes-rpm-version: "1.32.4"
   # Any additional debs to install. Currently, Baski only supports ubuntu and flatcar and this will only work with Ubuntu.
   extra-debs: "nfs-common"
   # Whether to add Trivy into the image.
@@ -135,10 +139,9 @@ build:
   additional-images: []
   # Any additional metadata/tags to add to the image as a map[string]string.
   # The following are available via the `generateBuilderMetadata` func in the provisioner and any additional data added here will be appended in that func.
-  #  "os": o.BuildOS,
-  #  "k8s": o.KubeVersion,
-  #  "gpu": gpu,
-  #  "date": time.Now().Format(time.RFC3339),
+  #  "os": o.BuildOS
+  #  "kubernetes_version": v(o.KubeVersion)
+  #  "date": time.Now().Format(time.RFC3339)
   additional-metadata: {}
 
 # Scan stage options.

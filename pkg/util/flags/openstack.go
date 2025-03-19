@@ -33,7 +33,6 @@ func (o *OpenStackCoreFlags) SetOptionsFromViper() {
 	o.CloudsPath = viper.GetString(fmt.Sprintf("%s.clouds-file", viperOpenStackPrefix))
 	o.CloudName = viper.GetString(fmt.Sprintf("%s.cloud-name", viperOpenStackPrefix))
 	o.MetadataPrefix = viper.GetString(fmt.Sprintf("%s.metadata-prefix", viperOpenStackPrefix))
-
 }
 
 // OpenStackInstanceFlags are Additional flags that can would be required for other steps such as scan, sign and publish.

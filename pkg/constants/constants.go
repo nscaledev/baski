@@ -19,10 +19,7 @@ package constants
 var (
 	Version     = "v1.2.2"
 	SupportedOS = []string{
-		"ubuntu-2004",
-		"ubuntu-2004-efi",
 		"ubuntu-2204",
-		"ubuntu-2204-efi",
 		"ubuntu-2404",
 		"rockylinux-8",
 		"rockylinux-9",
