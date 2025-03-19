@@ -1,7 +1,7 @@
 # Baski - Build And Scan Kubernetes Images
 
-[//]: # ([![Known Vulnerabilities]&#40;https://snyk.io/test/github/drewbernetes/baski/badge.svg&#41;]&#40;https://snyk.io/test/github/drewbernetes/baski&#41;)
-[![Build on Tag](https://github.com/drewbernetes/baski/actions/workflows/tag.yml/badge.svg?branch=main&event=release)](https://github.com/drewbernetes/baski/actions/workflows/tag.yml)
+[//]: # ([![Known Vulnerabilities]&#40;https://snyk.io/test/github/nscaledev/baski/badge.svg&#41;]&#40;https://snyk.io/test/github/drewbernetes/baski&#41;)
+[![Build on Tag](https://github.com/nscaledev/baski/actions/workflows/tag.yml/badge.svg?branch=main&event=release)](https://github.com/drewbernetes/baski/actions/workflows/tag.yml)
 
 A binary for building and scanning (with [Trivy](https://github.com/aquasecurity/trivy)) a Kubernetes image using
 the [kubernetes-sigs/image-builder](https://github.com/kubernetes-sigs/image-builder) repo or
@@ -27,7 +27,7 @@ ability, but you know, hidden bugs exist in all projects_
 | [OpenStack](docs/openstack.md) |
 | [Kubevirt](docs/kubevirt.md)   |
 
-*More clouds could be supported but may not be maintained directly by Drewbernetes.*
+*More clouds could be supported but may not be maintained directly by Nscale.*
 
 # Usage
 

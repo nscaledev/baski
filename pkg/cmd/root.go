@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/drewbernetes/baski/pkg/cmd/build"
-	"github.com/drewbernetes/baski/pkg/cmd/scan"
-	"github.com/drewbernetes/baski/pkg/cmd/sign"
-	"github.com/drewbernetes/baski/pkg/cmd/util/config"
+	"github.com/nscaledev/baski/pkg/cmd/build"
+	"github.com/nscaledev/baski/pkg/cmd/scan"
+	"github.com/nscaledev/baski/pkg/cmd/sign"
+	"github.com/nscaledev/baski/pkg/cmd/util/config"
 	"github.com/spf13/cobra"
 )
 

@@ -11,7 +11,7 @@ package mock
 import (
 	reflect "reflect"
 
-	flags "github.com/drewbernetes/baski/pkg/util/flags"
+	flags "github.com/nscaledev/baski/pkg/util/flags"
 	gophercloud "github.com/gophercloud/gophercloud"
 	keypairs "github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/keypairs"
 	servers "github.com/gophercloud/gophercloud/openstack/compute/v2/servers"

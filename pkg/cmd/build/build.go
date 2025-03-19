@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/drewbernetes/baski/pkg/constants"
-	"github.com/drewbernetes/baski/pkg/providers/packer"
-	"github.com/drewbernetes/baski/pkg/provisoner"
-	"github.com/drewbernetes/baski/pkg/util/flags"
+	"github.com/nscaledev/baski/pkg/constants"
+	"github.com/nscaledev/baski/pkg/providers/packer"
+	"github.com/nscaledev/baski/pkg/provisoner"
+	"github.com/nscaledev/baski/pkg/util/flags"
 	"github.com/spf13/cobra"
 )
 

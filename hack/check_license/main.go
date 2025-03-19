@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import (
 const (
 	// goApache2LicenseHeader is an exact match for a license header.
 	goApache2LicenseHeader = `/*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ var (
 	// errFail tells you there was an error detected.
 	errFail = errors.New("errors detected")
 
-	// errNoComments tells you you've not commented anything, bad engineer.
+	// errNoComments tells you that you've not commented anything.
 	errNoComments = errors.New("file contains no comments")
 
 	// errFirstCommentNotLicense tells you that the first comment isn't a license.
@@ -64,6 +64,10 @@ func glob(extension string) ([]string, error) {
 
 	appendFileWithExtension := func(path string, f os.FileInfo, err error) error {
 		if f.IsDir() {
+			return nil
+		}
+
+		if strings.Contains(path, "pkg/mock") {
 			return nil
 		}
 

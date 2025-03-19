@@ -1,7 +1,7 @@
 # git-cliff ~ configuration file
 # https://git-cliff.org/docs/configuration
 [repo]
-url = "drewbernetes"
+url = "nscaledev"
 repo = "baski"
 # Set the GITHUB_TOKEN env var with your PAT in to have this work. Fopr ease, set it in your ~/.bashrc, ~/.zshrc etc
 
@@ -12,7 +12,7 @@ breaking_always_bump_major = true
 initial_tag = "0.1.0"
 
 [changelog]
-# template for the changelog header
+# changelog header
 header = """
 # Changelog\n
 All notable changes to this project will be documented in this file.
