@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ limitations under the License.
 package remote
 
 import (
-	"github.com/drewbernetes/baski/pkg/mock"
+	"github.com/nscaledev/baski/pkg/mock"
 	"go.uber.org/mock/gomock"
 	"testing"
 )

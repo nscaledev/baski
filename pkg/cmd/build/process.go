@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	gitRepo "github.com/drewbernetes/baski/pkg/git"
-	systemUtils "github.com/drewbernetes/baski/pkg/system"
-	"github.com/drewbernetes/baski/pkg/util/flags"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/google/uuid"
+	gitRepo "github.com/nscaledev/baski/pkg/git"
+	systemUtils "github.com/nscaledev/baski/pkg/system"
+	"github.com/nscaledev/baski/pkg/util/flags"
 )
 
 // createRepoDirectory create the random directory where the Image repo will be cloned into.

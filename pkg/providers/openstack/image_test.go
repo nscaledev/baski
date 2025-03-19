@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package ostack
 
 import (
 	"fmt"
-	th "github.com/drewbernetes/baski/testhelpers"
 	"github.com/gophercloud/gophercloud/openstack/imageservice/v2/images"
+	th "github.com/nscaledev/baski/testhelpers"
 	"net/http"
 	"strconv"
 	"strings"

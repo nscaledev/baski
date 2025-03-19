@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ limitations under the License.
 package sign
 
 import (
-	"github.com/drewbernetes/baski/pkg/mock"
-	"github.com/drewbernetes/baski/pkg/util/interfaces"
+	"github.com/nscaledev/baski/pkg/mock"
+	"github.com/nscaledev/baski/pkg/util/interfaces"
 	"go.uber.org/mock/gomock"
 	"testing"
 )
