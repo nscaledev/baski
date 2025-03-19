@@ -9,8 +9,7 @@ on:
 jobs:
   lint:
     name: Lint files
-    runs-on:
-      group: nscale-k8s
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: actions/setup-go@0aaccfd150d50ccaeb58ebd88d36e91967a5f35b
@@ -25,8 +24,7 @@ jobs:
 
   test:
     name: Run tests
-    runs-on:
-      group: nscale-k8s
+    runs-on: ubuntu-24.04
     needs: lint
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -36,8 +34,7 @@ jobs:
       - run: go test -v -cover ./...
 
   security-checks:
-    runs-on:
-      group: nscale-k8s
+    runs-on: ubuntu-24.04
     needs: test
     permissions:
       contents: read
