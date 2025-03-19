@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Drewbernetes.
+Copyright 2025 Nscale.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ var (
 		"ubuntu-2204",
 		"ubuntu-2204-efi",
 		"ubuntu-2404",
+		"rockylinux-8",
+		"rockylinux-9",
 	}
-	TrivyVersion = "0.53.0"
+	TrivyVersion = "0.60.0"
 )
