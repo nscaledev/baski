@@ -30,6 +30,7 @@ type BuildOptions struct {
 
 	Verbose                 bool
 	BuildOS                 string
+	BuildUser               string
 	ImagePrefix             string
 	ImageRepo               string
 	ImageRepoBranch         string
@@ -39,6 +40,7 @@ type BuildOptions struct {
 	CrictlVersion           string
 	CniVersion              string
 	CniDebVersion           string
+	CniRpmVersion           string
 	KubeVersion             string
 	KubeRpmVersion          string
 	KubeDebVersion          string
@@ -65,6 +67,7 @@ func (o *BuildOptions) SetOptionsFromViper() {
 	// General Flags
 	o.Verbose = viper.GetBool(fmt.Sprintf("%s.verbose", viperBuildPrefix))
 	o.BuildOS = viper.GetString(fmt.Sprintf("%s.build-os", viperBuildPrefix))
+	o.BuildUser = viper.GetString(fmt.Sprintf("%s.build-user", viperBuildPrefix))
 	o.ImagePrefix = viper.GetString(fmt.Sprintf("%s.image-prefix", viperBuildPrefix))
 	o.ImageRepo = viper.GetString(fmt.Sprintf("%s.image-repo", viperBuildPrefix))
 	o.ImageRepoBranch = viper.GetString(fmt.Sprintf("%s.image-repo-branch", viperBuildPrefix))
@@ -74,6 +77,7 @@ func (o *BuildOptions) SetOptionsFromViper() {
 	o.CrictlVersion = viper.GetString(fmt.Sprintf("%s.crictl-version", viperBuildPrefix))
 	o.CniVersion = viper.GetString(fmt.Sprintf("%s.cni-version", viperBuildPrefix))
 	o.CniDebVersion = viper.GetString(fmt.Sprintf("%s.cni-deb-version", viperBuildPrefix))
+	o.CniRpmVersion = viper.GetString(fmt.Sprintf("%s.cni-rpm-version", viperBuildPrefix))
 	o.KubeVersion = viper.GetString(fmt.Sprintf("%s.kubernetes-version", viperBuildPrefix))
 	o.KubeDebVersion = viper.GetString(fmt.Sprintf("%s.kubernetes-deb-version", viperBuildPrefix))
 	o.KubeRpmVersion = viper.GetString(fmt.Sprintf("%s.kubernetes-rpm-version", viperBuildPrefix))

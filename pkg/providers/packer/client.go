@@ -32,10 +32,12 @@ import (
 )
 
 type GlobalBuildConfig struct {
+	BuildUser            string            `json:"ssh_username,omitempty"`
 	ContainerdSHA256     string            `json:"containerd_sha256,omitempty"`
 	ContainerdVersion    string            `json:"containerd_version,omitempty"`
 	CniVersion           string            `json:"kubernetes_cni_semver,omitempty"`
 	CniDebVersion        string            `json:"kubernetes_cni_deb_version,omitempty"`
+	CniRpmVersion        string            `json:"kubernetes_cni_rpm_version,omitempty"`
 	CrictlVersion        string            `json:"crictl_version,omitempty"`
 	KubernetesSemver     string            `json:"kubernetes_semver,omitempty"`
 	KubernetesRpmVersion string            `json:"kubernetes_rpm_version,omitempty"`
@@ -52,17 +54,24 @@ type GlobalBuildConfig struct {
 
 func NewCoreBuildconfig(o *flags.BuildOptions) (*GlobalBuildConfig, string, error) {
 	b := &GlobalBuildConfig{
-		ContainerdSHA256:     o.ContainerdSHA256,
-		ContainerdVersion:    o.ContainerdVersion,
-		CniVersion:           "v" + o.CniVersion,
-		CniDebVersion:        o.CniDebVersion,
-		CrictlVersion:        o.CrictlVersion,
-		KubernetesSemver:     "v" + o.KubeVersion,
-		KubernetesSeries:     truncateVersion("v" + o.KubeVersion),
-		KubernetesRpmVersion: o.KubeRpmVersion,
-		KubernetesDebVersion: o.KubeDebVersion,
-		ExtraDebs:            o.ExtraDebs,
+		BuildUser:         o.BuildUser,
+		ContainerdSHA256:  o.ContainerdSHA256,
+		ContainerdVersion: o.ContainerdVersion,
+		CniVersion:        "v" + o.CniVersion,
+		CrictlVersion:     o.CrictlVersion,
+		KubernetesSemver:  "v" + o.KubeVersion,
+		KubernetesSeries:  truncateVersion("v" + o.KubeVersion),
+		ExtraDebs:         o.ExtraDebs,
 	}
+
+	if strings.Contains(o.BuildOS, "rockylinux") {
+		b.KubernetesRpmVersion = o.KubeRpmVersion
+		b.CniRpmVersion = o.CniRpmVersion
+	} else {
+		b.KubernetesDebVersion = o.KubeDebVersion
+		b.CniDebVersion = o.CniDebVersion
+	}
+
 	var ansibleUserVars string
 	var customRoles string
 	var additionalImages string

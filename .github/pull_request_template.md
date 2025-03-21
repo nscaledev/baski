@@ -5,4 +5,3 @@
 # PR checklist
 - [ ] Run tests locally
 - [ ] Updated Readme
-- [ ] Updated Changelog
