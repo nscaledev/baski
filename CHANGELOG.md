@@ -5,12 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.6] - 2025-03-19
+## [1.2.6] - 2025-03-21
+
+### Added
+- Adding rocky support, updating module, removing dockerfile builds & minor cleanup/refactoring by @drew-viles in [#32](https://github.com/nscaledev/baski/pull/32)
 
 ### Changed
+- Automated changelog update by @nscale-actions[bot]
 - Moving ownership to nscale and bumping modules by @drew-viles in [#33](https://github.com/nscaledev/baski/pull/33)
 - Bump github.com/go-jose/go-jose/v4 from 4.0.4 to 4.0.5 in the go_modules group across 1 directory by @dependabot[bot] in [#30](https://github.com/nscaledev/baski/pull/30)
 
+## New Contributors
+* @nscale-actions[bot] made their first contribution
 ## [1.2.5] - 2025-01-13
 
 ### Changed
