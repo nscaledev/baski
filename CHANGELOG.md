@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.0] - 2025-03-21
 
 ### :gear: Changed
-- Changing git cliff to bump mor than patch by @drew-viles
+- Changing git cliff to bump mor than patch
 - Moving ownership to nscale and bumping modules by @drew-viles in [#33](https://github.com/nscaledev/baski/pull/33)
 - Bump github.com/go-jose/go-jose/v4 from 4.0.4 to 4.0.5 in the go_modules group across 1 directory by @dependabot[bot] in [#30](https://github.com/nscaledev/baski/pull/30)
 
